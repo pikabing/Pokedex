@@ -57,11 +57,11 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
     override fun setPokemonDetails(response: PokemonDetail) {
 
-        heightOfPokemon.text = """Height: ${response.height}m"""
+        heightOfPokemon.text = "Height: ${response.height}m"
 
         weightOfPokemon.text = "Weight: ${response.weight}g"
 
-        experienceOfPokemon.text = "Points: $response.base_experience"
+        experienceOfPokemon.text = "Points: ${response.base_experience}"
 
         movesofPokemon.text = "Moves: ${response.moves.size()}"
 
