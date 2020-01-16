@@ -3,9 +3,13 @@ package com.example.pokemon.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.DisplayMetrics
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pokemon.utils.PagingListener
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
@@ -18,30 +22,30 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
-    var layoutManager = GridLayoutManager(this, 2)
+    var layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private lateinit var pokemonAdapter: PokemonAdapter
     private lateinit var mainPresenterImpl: MainPresenterImpl
 
-    private var offset = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        hidePokemonRV()
 
         mainPresenterImpl = MainPresenterImpl(this)
 
         pokemonAdapter = PokemonAdapter(pokeList) {
-            var intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
+            val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
             intent.putExtra("Pokemon", mainPresenterImpl.getPokemonList(it))
             startActivity(intent)
         }
 
+        hidePokemonRV()
+
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
 
-        mainPresenterImpl.loadMorePokemons(offset)
+        pokemonAdapter.handleLoading(true)
+        mainPresenterImpl.loadMorePokemons()
 
         pokemonRV.addOnScrollListener(object: PagingListener(layoutManager){
             override fun isLastPage(): Boolean = isLastPage
@@ -50,8 +54,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
             override fun loadMoreItems() {
                 isLoading = true
-                offset+=8
-                mainPresenterImpl.loadMorePokemons(offset)
+                pokemonAdapter.handleLoading(true)
+                mainPresenterImpl.loadMorePokemons()
             }
 
         })
@@ -69,10 +73,23 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
     override fun setPokemonAdapter(pokeList: ArrayList<Pokemon>) {
         isLoading = false
+        pokemonAdapter.handleLoading(false)
         pokemonAdapter.addData(pokeList)
+
     }
 
     override fun showErrorToast() {
         Toast.makeText(this, "Error calling API", Toast.LENGTH_LONG).show()
     }
+
+    fun getScreenWidth(): Int {
+        val metrics = DisplayMetrics()
+        getWindowManager().getDefaultDisplay().getMetrics(metrics)
+
+        val width = metrics.widthPixels
+
+        return width
+    }
+
+
 }

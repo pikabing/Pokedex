@@ -1,9 +1,9 @@
 package com.example.pokemon.utils
 
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-abstract class PagingListener(var layoutManager: GridLayoutManager) : RecyclerView.OnScrollListener() {
+abstract class PagingListener(var layoutManager: StaggeredGridLayoutManager) : RecyclerView.OnScrollListener() {
 
     abstract fun isLastPage(): Boolean
     abstract fun isLoading(): Boolean
@@ -13,7 +13,7 @@ abstract class PagingListener(var layoutManager: GridLayoutManager) : RecyclerVi
 
         val visibleItems = layoutManager.childCount
         val totalItems = layoutManager.itemCount
-        val firstItemPosition = layoutManager.findFirstVisibleItemPosition()
+        val firstItemPosition = layoutManager.findFirstVisibleItemPositions(null)[0]
 
         if(!isLoading() and !isLastPage()) {
             if (visibleItems + firstItemPosition >= totalItems && firstItemPosition >= 0) {

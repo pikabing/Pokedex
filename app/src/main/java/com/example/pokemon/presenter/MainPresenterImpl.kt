@@ -13,12 +13,14 @@ import retrofit2.Response
 open class MainPresenterImpl(var mainView: MainContract.MainView) : MainContract.MainPresenter {
 
     var pokeList: ArrayList<Pokemon> = arrayListOf()
+    var offset: Int = 0
 
-    override fun loadMorePokemons(offset: Int) {
+    override fun loadMorePokemons() {
 
         if(offset <= 960)
             callPokemonApi(offset)
 
+        offset+=8
 
     }
 

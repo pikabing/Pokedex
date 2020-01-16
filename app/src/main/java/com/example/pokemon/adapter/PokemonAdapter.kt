@@ -1,29 +1,64 @@
 package com.example.pokemon.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.pokemon.R
 import com.example.pokemon.model.Pokemon
 import kotlinx.android.synthetic.main.pokemon_list.view.*
 
-class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Unit) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.pokemon_list, parent, false)
-    )
+class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    val VIEW_LOADER = 0
+    val VIEW_LIST = 1
+    var loading: Boolean = false
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_LOADER -> ProgressBarViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.progress_bar, parent, false))
+
+            VIEW_LIST -> PokemonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_list, parent, false))
+
+            else -> PokemonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_list, parent, false))
+        }
+    }
+
+    override fun getItemCount(): Int = if (loading) pokeList.size + 1 else pokeList.size
+
+    override fun getItemViewType(position: Int): Int {
+        return when(loading && position == itemCount - 1) {
+            true -> VIEW_LOADER
+            else -> VIEW_LIST
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is PokemonViewHolder -> holder.bind(pokeList[position], position, listener)
+            is ProgressBarViewHolder -> {
+                val layoutParams = holder.itemView.layoutParams
+                if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
+                    layoutParams.isFullSpan = true
+                }
+            }
+        }
+    }
+
+    fun handleLoading(loading: Boolean) {
+        this.loading = loading
+        if (loading) {
+            notifyItemInserted(pokeList.size)
+        } else {
+            notifyItemRemoved(pokeList.size)
+        }
+    }
 
 
-    override fun getItemCount(): Int = pokeList.size
-
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(pokeList[position], position, listener)
-
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PokemonViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         fun bind(pokemon: Pokemon, pos: Int, listener: (Int) -> Unit) = with(itemView) {
             itemView.pokemonCardTitle.text = pokemon.name
@@ -34,16 +69,16 @@ class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Un
                 listener.invoke(pos)
             }
         }
-
-
     }
+
+    class ProgressBarViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
     fun addData(pokeList: ArrayList<Pokemon>) {
         var size = this.pokeList.size
         this.pokeList = pokeList
         var sizeNew = pokeList.size
-        Log.e("TAG", "" + itemCount)
         notifyItemRangeChanged(size, sizeNew)
     }
+
 
 }
