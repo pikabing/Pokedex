@@ -1,5 +1,6 @@
 package com.example.pokemon.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,7 @@ class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Un
         var size = this.pokeList.size
         this.pokeList = pokeList
         var sizeNew = pokeList.size
+        Log.e("TAG", "" + itemCount)
         notifyItemRangeChanged(size, sizeNew)
     }
 

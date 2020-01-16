@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
         pokemonAdapter = PokemonAdapter(pokeList) {
             var intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
-            intent.putExtra("Pokemon", pokeList[it])
+            intent.putExtra("Pokemon", mainPresenterImpl.getPokemonList(it))
             startActivity(intent)
         }
 

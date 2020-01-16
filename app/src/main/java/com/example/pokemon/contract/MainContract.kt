@@ -13,5 +13,6 @@ interface MainContract {
 
     interface MainPresenter {
         fun loadMorePokemons(offset: Int)
+        fun getPokemonList(id: Int): Pokemon
     }
 }

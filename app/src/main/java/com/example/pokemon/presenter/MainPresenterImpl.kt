@@ -22,6 +22,8 @@ open class MainPresenterImpl(var mainView: MainContract.MainView) : MainContract
 
     }
 
+    override fun getPokemonList(id: Int) = pokeList[id]
+
     fun callPokemonApi(offset: Int) = RetroFitClient.instance.getPokemons(offset, 8)
         .enqueue(object: Callback<PokemonResponse> {
             override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
