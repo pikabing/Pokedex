@@ -37,7 +37,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
         val id = pokemon.id.toInt()
         val name = pokemon.name
 
-        backButton.setOnClickListener { pokemonDetailPresenterImpl.backButtonClicked() }
+        backButton.setOnClickListener { finish() }
 
         pokemonDetailHeading.text = name
         nameOfPokemon.text = name

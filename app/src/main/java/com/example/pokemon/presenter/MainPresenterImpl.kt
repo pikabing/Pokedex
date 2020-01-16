@@ -1,5 +1,6 @@
 package com.example.pokemon.presenter
 
+import android.util.Log
 import android.widget.Toast
 import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.contract.MainContract

@@ -22,9 +22,4 @@ class PokemonDetailPresenterImpl(var pokemonDetailView: PokemonDetailContract.Po
 
         })
 
-
-
-    override fun backButtonClicked() {
-
-    }
 }
