@@ -1,0 +1,49 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="headingStyle">
+        <item name="android:textSize">22sp</item>
+        <item name="android:padding">15dp</item>
+        <item name="fontFamily">@font/roboto_mono</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="pokemonCardName" parent="headingStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="pokemonCardDetails" parent="pokemonCardName">
+        <item name="android:textSize">15sp</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <style name="TextButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:buttonCornerRadius" tools:targetApi="p">8dp</item>
+        <item name="backgroundTint">@android:color/darker_gray</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="Spinner">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateTintMode">src_atop</item>
+        <item name="android:indeterminateTint">@color/cardview_dark_background</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+</resources>
