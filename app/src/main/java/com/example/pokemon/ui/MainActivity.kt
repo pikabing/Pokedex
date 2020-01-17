@@ -16,6 +16,7 @@ import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.presenter.MainPresenterImpl
+import com.example.pokemon.utils.PokemonItemDecoration
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContract.MainView {
@@ -32,7 +33,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         setContentView(R.layout.activity_main)
 
         mainPresenterImpl = MainPresenterImpl(this)
-
         pokemonAdapter = PokemonAdapter(pokeList) {
             val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
             intent.putExtra("Pokemon", mainPresenterImpl.getPokemonList(it))
@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         }
 
         hidePokemonRV()
-
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
 
@@ -60,6 +59,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
         })
 
+        var sidePadding = resources.getDimensionPixelSize(R.dimen.sidePadding)
+        pokemonRV.addItemDecoration(PokemonItemDecoration(sidePadding))
+
     }
 
     override fun showPokemonRV() {
@@ -72,23 +74,14 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     }
 
     override fun setPokemonAdapter(pokeList: ArrayList<Pokemon>) {
-        isLoading = false
         pokemonAdapter.handleLoading(false)
         pokemonAdapter.addData(pokeList)
+        isLoading = false
 
     }
 
     override fun showErrorToast() {
         Toast.makeText(this, "Error calling API", Toast.LENGTH_LONG).show()
-    }
-
-    fun getScreenWidth(): Int {
-        val metrics = DisplayMetrics()
-        getWindowManager().getDefaultDisplay().getMetrics(metrics)
-
-        val width = metrics.widthPixels
-
-        return width
     }
 
 
