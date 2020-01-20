@@ -15,12 +15,18 @@ class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailCon
                 pokemonDetailView?.showErrorToast()
             }
 
-            override fun onResponse(call: Call<PokemonDetail>, response: Response<PokemonDetail>) {
-                pokemonDetailView?.setPokemonDetails(response.body()!!)
-                pokemonDetailView?.hideProgressBar()
-            }
+            override fun onResponse(call: Call<PokemonDetail>, response: Response<PokemonDetail>) = populateDetails(response.body())
 
         })
+
+    private fun populateDetails(pokemonDetail: PokemonDetail?) {
+
+        pokemonDetail?.let {
+            pokemonDetailView?.setPokemonDetails(it)
+            pokemonDetailView?.hideProgressBar()
+        }
+
+    }
 
     override fun onDestroy() {
         pokemonDetailView = null

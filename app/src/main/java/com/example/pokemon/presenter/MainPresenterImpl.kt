@@ -29,7 +29,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
         mainView = null
     }
 
-    fun callPokemonApi(offset: Int) = RetroFitClient.instance.getPokemons(offset, 8)
+    private fun callPokemonApi(offset: Int) = RetroFitClient.instance.getPokemons(offset, 8)
         .enqueue(object: Callback<PokemonResponse> {
             override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
                 mainView?.showErrorToast()
@@ -38,20 +38,21 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
             override fun onResponse(
                 call: Call<PokemonResponse>,
                 response: Response<PokemonResponse>
-            ) = populateList(response.body()!!.results)
+            ) = populateList(response.body()?.results)
         })
 
-///////////////
 
-    fun populateList(response: ArrayList<Pokemon>) {
-        response.map {
-            var tokens = it.url.split("/")
-            it.id = tokens[tokens.lastIndex - 1]
-            it.name = it.name.capitalize()
+    fun populateList(response: ArrayList<Pokemon>?) {
+        response?.let {
+            response.map {
+                val tokens = it.url.split("/")
+                it.id = tokens[tokens.lastIndex - 1]
+                it.name = it.name.capitalize()
+            }
+            pokeList.addAll(response)
+            mainView?.setPokemonAdapter(response)
+            mainView?.showPokemonRV()
         }
-        pokeList.addAll(response)
-        mainView?.setPokemonAdapter(response)
-        mainView?.showPokemonRV()
 
     }
 }
