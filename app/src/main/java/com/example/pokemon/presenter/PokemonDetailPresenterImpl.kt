@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PokemonDetailPresenterImpl(var pokemonDetailView: PokemonDetailContract.PokemonDetailView) : PokemonDetailContract.PokemonDetailPresenter {
+class PokemonDetailPresenterImpl(private val pokemonDetailView: PokemonDetailContract.PokemonDetailView) : PokemonDetailContract.PokemonDetailPresenter {
 
     override fun getPokemonDetails(id: Int) = RetroFitClient.instance.getPokemonDetails(id).enqueue(object:
             Callback<PokemonDetail> {
