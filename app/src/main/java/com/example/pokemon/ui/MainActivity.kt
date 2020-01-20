@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
 
-        pokemonAdapter!!.handleLoading(true)
-        mainPresenterImpl!!.loadMorePokemons()
+        pokemonAdapter?.handleLoading(true)
+        mainPresenterImpl?.loadMorePokemons()
 
         pokemonRV.addOnScrollListener(object: PagingListener(layoutManager){
             override fun isLastPage(): Boolean = isLastPage
@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
             override fun loadMoreItems() {
                 isLoading = true
-                pokemonAdapter!!.handleLoading(true)
-                mainPresenterImpl!!.loadMorePokemons()
+                pokemonAdapter?.handleLoading(true)
+                mainPresenterImpl?.loadMorePokemons()
             }
 
         })
@@ -70,14 +70,19 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
     }
 
     override fun setPokemonAdapter(pokeList: ArrayList<Pokemon>) {
-        pokemonAdapter!!.handleLoading(false)
-        pokemonAdapter!!.addData(pokeList)
+        pokemonAdapter?.handleLoading(false)
+        pokemonAdapter?.addData(pokeList)
         isLoading = false
 
     }
 
     override fun showErrorToast() {
         Toast.makeText(this, "Error calling API", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainPresenterImpl?.onDestroy()
     }
 
 
