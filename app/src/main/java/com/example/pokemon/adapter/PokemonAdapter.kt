@@ -11,7 +11,8 @@ import com.example.pokemon.model.Pokemon
 import kotlinx.android.synthetic.main.pokemon_list.view.*
 
 
-class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Unit) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val VIEW_LOADER = 0
     val VIEW_LIST = 1
@@ -19,20 +20,38 @@ class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Un
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            VIEW_LOADER -> ProgressBarViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.progress_bar, parent, false))
+            VIEW_LOADER -> ProgressBarViewHolder(
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.progress_bar,
+                    parent,
+                    false
+                )
+            )
 
-            VIEW_LIST -> PokemonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_list, parent, false))
+            VIEW_LIST -> PokemonViewHolder(
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.pokemon_list,
+                    parent,
+                    false
+                )
+            )
 
-            else -> PokemonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_list, parent, false))
+            else -> ProgressBarViewHolder(
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.progress_bar,
+                    parent,
+                    false
+                )
+            )
         }
     }
 
     override fun getItemCount(): Int = if (loading) pokeList.size + 1 else pokeList.size
 
     override fun getItemViewType(position: Int): Int {
-        return when(loading && position == itemCount - 1) {
-            true -> VIEW_LOADER
-            else -> VIEW_LIST
+        return when (loading && position == itemCount - 1) {
+            false -> VIEW_LIST
+            else -> VIEW_LOADER
         }
     }
 
@@ -74,10 +93,10 @@ class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Un
     class ProgressBarViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
     fun addData(pokeList: ArrayList<Pokemon>) {
-        var size = this.pokeList.size
-        this.pokeList = pokeList
-        var sizeNew = pokeList.size
-        notifyItemRangeChanged(size, sizeNew)
+        val size = this.pokeList.size
+        this.pokeList.addAll(pokeList)
+        val sizeNew = this.pokeList.size
+        notifyItemRangeInserted(size, sizeNew)
     }
 
 

@@ -45,7 +45,7 @@ open class MainPresenterImpl(var mainView: MainContract.MainView) : MainContract
             it.name = it.name.capitalize()
         }
         pokeList.addAll(response)
-        mainView.setPokemonAdapter(pokeList)
+        mainView.setPokemonAdapter(response)
         mainView.showPokemonRV()
 
     }
