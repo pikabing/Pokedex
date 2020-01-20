@@ -1,32 +1,24 @@
 package com.example.pokemon.ui
 
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.pokemon.R
-import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.contract.PokemonDetailContract
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonDetail
 import com.example.pokemon.presenter.PokemonDetailPresenterImpl
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.pokemon_detail.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.PokemonDetailView {
 
-    lateinit var pokemonDetailPresenterImpl: PokemonDetailPresenterImpl
+    private var pokemonDetailPresenterImpl: PokemonDetailPresenterImpl? = null
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.pokemon_detail)
@@ -45,7 +37,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
             .load(this.resources.getString(R.string.pokemon_image_url) + pokemon.id + ".png")
             .into(pokemonDetailImage)
 
-        pokemonDetailPresenterImpl.getPokemonDetails(id)
+        pokemonDetailPresenterImpl!!.getPokemonDetails(id)
 
     }
 
