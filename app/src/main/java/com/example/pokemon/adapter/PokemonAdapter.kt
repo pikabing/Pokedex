@@ -11,12 +11,12 @@ import com.example.pokemon.model.Pokemon
 import kotlinx.android.synthetic.main.pokemon_list.view.*
 
 
-class PokemonAdapter(var pokeList: ArrayList<Pokemon>, val listener: (Int) -> Unit) :
+class PokemonAdapter(private val pokeList: ArrayList<Pokemon>, private val listener: (Int) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val VIEW_LOADER = 0
-    val VIEW_LIST = 1
-    var loading: Boolean = false
+    private val VIEW_LOADER = 0
+    private val VIEW_LIST = 1
+    private var loading: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
