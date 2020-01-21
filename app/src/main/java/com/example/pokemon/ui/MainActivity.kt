@@ -31,14 +31,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         mainPresenterImpl = MainPresenterImpl(this)
         pokemonAdapter = PokemonAdapter(pokeList) { id ->
             val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
-            intent.putExtra("Pokemon", mainPresenterImpl!!.getPokemon(id))
-            startActivity(intent)
             mainPresenterImpl?.getPokemon(id)?.let {
                 intent.putExtra("Pokemon", it)
                 startActivity(intent)
             }
         }
-
         hidePokemonRV()
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         pokemonAdapter?.handleLoading(true)
         mainPresenterImpl?.loadMorePokemons()
 
-        pokemonRV.addOnScrollListener(object: PagingListener(layoutManager){
+        pokemonRV.addOnScrollListener(object : PagingListener(layoutManager) {
             override fun isLastPage(): Boolean = isLastPage
 
             override fun isLoading(): Boolean = isLoading
