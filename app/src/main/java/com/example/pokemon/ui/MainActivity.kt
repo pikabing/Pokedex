@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
                 startActivity(intent)
             }
         }
-
         hidePokemonRV()
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         pokemonAdapter?.handleLoading(true)
         mainPresenterImpl?.loadMorePokemons()
 
-        pokemonRV.addOnScrollListener(object: PagingListener(layoutManager){
+        pokemonRV.addOnScrollListener(object : PagingListener(layoutManager) {
             override fun isLastPage(): Boolean = isLastPage
 
             override fun isLoading(): Boolean = isLoading
