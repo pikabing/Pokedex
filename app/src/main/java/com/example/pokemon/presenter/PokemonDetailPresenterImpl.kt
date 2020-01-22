@@ -1,25 +1,41 @@
 package com.example.pokemon.presenter
 
-import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.contract.PokemonDetailContract
 import com.example.pokemon.model.PokemonDetail
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.pokemon.repository.PokemonRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
-class PokemonDetailPresenterImpl(var pokemonDetailView: PokemonDetailContract.PokemonDetailView) : PokemonDetailContract.PokemonDetailPresenter {
+class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailContract.PokemonDetailView?) : PokemonDetailContract.PokemonDetailPresenter {
 
-    override fun getPokemonDetails(id: Int) = RetroFitClient.instance.getPokemonDetails(id).enqueue(object:
-            Callback<PokemonDetail> {
-            override fun onFailure(call: Call<PokemonDetail>, t: Throwable) {
-                pokemonDetailView.showErrorToast()
-            }
+    private val pokemonRepository = PokemonRepository.instance
+    private val compositeDisposable = CompositeDisposable()
 
-            override fun onResponse(call: Call<PokemonDetail>, response: Response<PokemonDetail>) {
-                pokemonDetailView.setPokemonDetails(response.body()!!)
-                pokemonDetailView.hideProgressBar()
-            }
+    override fun getPokemonDetails(id: Int) {
+        compositeDisposable.add(pokemonRepository.getPokemonDetails(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                populateDetails(it)
+            }, {
+                pokemonDetailView?.showErrorToast()
+            })
+        )
+    }
 
-        })
+    private fun populateDetails(pokemonDetail: PokemonDetail?) {
+
+        pokemonDetail?.let {
+            pokemonDetailView?.setPokemonDetails(it)
+            pokemonDetailView?.hideProgressBar()
+        }
+
+    }
+
+    override fun onDestroy() {
+        pokemonDetailView = null
+        compositeDisposable.dispose()
+    }
 
 }
