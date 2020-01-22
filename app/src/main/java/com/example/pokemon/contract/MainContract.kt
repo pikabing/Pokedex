@@ -13,7 +13,7 @@ interface MainContract {
 
     interface MainPresenter {
         fun loadMorePokemons()
-        fun getPokemon(id: Int): Pokemon?
+        fun getPokemon(id: Int): Pokemon
         fun onDestroy()
     }
 }
