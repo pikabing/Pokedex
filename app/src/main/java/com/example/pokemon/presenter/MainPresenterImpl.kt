@@ -13,7 +13,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
-    private val pokemonRepository = PokemonRepository()
+    private val pokemonRepository = PokemonRepository.instance
     private val compositeDisposable = CompositeDisposable()
 
     override fun loadMorePokemons() {

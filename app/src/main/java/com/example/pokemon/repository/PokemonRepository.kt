@@ -4,10 +4,16 @@ import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonDetail
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
-class PokemonRepository {
+class PokemonRepository private constructor(){
+
+    private object HOLDER {
+        val INSTANCE = PokemonRepository()
+    }
+
+    companion object {
+        val instance: PokemonRepository by lazy { HOLDER.INSTANCE }
+    }
 
     fun getPokemonList(offset: Int): Single<ArrayList<Pokemon>> = RetroFitClient.INSTANCE.getPokemons(offset, 8)
         .map { it.results }

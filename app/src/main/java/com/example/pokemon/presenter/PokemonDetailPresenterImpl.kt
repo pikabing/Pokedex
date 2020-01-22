@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 
 class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailContract.PokemonDetailView?) : PokemonDetailContract.PokemonDetailPresenter {
 
-    private val pokemonRepository = PokemonRepository()
+    private val pokemonRepository = PokemonRepository.instance
     private val compositeDisposable = CompositeDisposable()
 
     override fun getPokemonDetails(id: Int) {
