@@ -29,15 +29,13 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         setContentView(R.layout.activity_main)
 
         mainPresenterImpl = MainPresenterImpl(this)
-        pokemonAdapter = PokemonAdapter(pokeList) {
+        pokemonAdapter = PokemonAdapter(pokeList) { id ->
             val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
-            mainPresenterImpl?.getPokemon(it)?.let {
+            mainPresenterImpl?.getPokemon(id)?.let {
                 intent.putExtra("Pokemon", it)
                 startActivity(intent)
             }
-
         }
-
         hidePokemonRV()
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter

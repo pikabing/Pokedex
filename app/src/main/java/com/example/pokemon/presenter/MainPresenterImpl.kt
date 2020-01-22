@@ -1,49 +1,58 @@
 package com.example.pokemon.presenter
 
-import com.example.pokemon.api.RetroFitClient
+import android.annotation.SuppressLint
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.model.PokemonResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.pokemon.repository.PokemonRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+
 
 class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainContract.MainPresenter {
 
-    private val pokeList: ArrayList<Pokemon> = arrayListOf()
+    private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
+    private val pokemonRepository = PokemonRepository.instance
+    private val compositeDisposable = CompositeDisposable()
 
     override fun loadMorePokemons() {
 
-        if(offset > 960)
+        if (offset > 960)
             return
 
         callPokemonApi(offset)
-        offset+=8
+        offset += 8
 
     }
 
-    override fun getPokemonList(id: Int) = pokeList[id]
+    override fun getPokemon(id: Int) = pokeList[id]
 
     override fun onDestroy() {
         mainView = null
+        compositeDisposable.dispose()
     }
 
-    private fun callPokemonApi(offset: Int) = RetroFitClient.instance.getPokemons(offset, 8)
-        .enqueue(object: Callback<PokemonResponse> {
-            override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
+    private fun callPokemonApi(offset: Int) {
+
+        compositeDisposable.add(pokemonRepository.getPokemonList(offset)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it?.let {
+                    populateList(it)
+                }
+            }, {
                 mainView?.showErrorToast()
             }
+            ))
 
-            override fun onResponse(
-                call: Call<PokemonResponse>,
-                response: Response<PokemonResponse>
-            ) = populateList(response.body()?.results)
-        })
+    }
 
 
-    fun populateList(response: ArrayList<Pokemon>?) {
-        response?.let {
+    @SuppressLint("DefaultLocale")
+    private fun populateList(response: ArrayList<Pokemon>) {
+        response.let {
             response.map {
                 val tokens = it.url.split("/")
                 it.id = tokens[tokens.lastIndex - 1]
