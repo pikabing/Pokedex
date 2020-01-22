@@ -11,10 +11,9 @@ import io.reactivex.schedulers.Schedulers
 
 class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainContract.MainPresenter {
 
-    private var pokeList: ArrayList<Pokemon>? = arrayListOf()
+    private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
     private val pokemonRepository = PokemonRepository()
-
     private val compositeDisposable = CompositeDisposable()
 
     override fun loadMorePokemons() {
@@ -27,7 +26,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
     }
 
-    override fun getPokemon(id: Int) = pokeList?.get(id)
+    override fun getPokemon(id: Int) = pokeList[id]
 
     override fun onDestroy() {
         mainView = null
@@ -59,7 +58,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
                 it.id = tokens[tokens.lastIndex - 1]
                 it.name = it.name.capitalize()
             }
-            pokeList?.addAll(response)
+            pokeList.addAll(response)
             mainView?.setPokemonAdapter(response)
             mainView?.showPokemonRV()
         }
