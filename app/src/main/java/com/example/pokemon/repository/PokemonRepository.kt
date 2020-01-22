@@ -14,5 +14,4 @@ class PokemonRepository {
 
 
     fun getPokemonDetails(id: Int): Single<PokemonDetail> = RetroFitClient.INSTANCE.getPokemonDetails(id)
-        .map { it }
 }
