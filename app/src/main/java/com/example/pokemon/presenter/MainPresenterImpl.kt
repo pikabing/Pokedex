@@ -51,8 +51,8 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
 
     @SuppressLint("DefaultLocale")
-    private fun populateList(response: ArrayList<Pokemon>?) {
-        response?.let {
+    private fun populateList(response: ArrayList<Pokemon>) {
+        response.let {
             response.map {
                 val tokens = it.url.split("/")
                 it.id = tokens[tokens.lastIndex - 1]
