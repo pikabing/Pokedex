@@ -3,7 +3,7 @@ package com.example.pokemon.presenter
 import android.annotation.SuppressLint
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.repository.PokemonRepository
+import com.example.pokemon.data.repository.PokemonRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers

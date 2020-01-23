@@ -1,8 +1,7 @@
-package com.example.pokemon.repository
+package com.example.pokemon.data.repository
 
 import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.model.PokemonDetail
 import io.reactivex.Single
 
 class PokemonRepository private constructor(){
@@ -19,5 +18,5 @@ class PokemonRepository private constructor(){
         .map { it.results }
 
 
-    fun getPokemonDetails(id: Int): Single<PokemonDetail> = RetroFitClient.INSTANCE.getPokemonDetails(id)
+    fun getPokemonDetails(id: Int): Single<Pokemon> = RetroFitClient.INSTANCE.getPokemonDetails(id)
 }

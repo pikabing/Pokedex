@@ -1,6 +1,6 @@
 package com.example.pokemon.api
 
-import com.example.pokemon.model.PokemonDetail
+import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -18,5 +18,5 @@ interface PokemonService {
     @GET("pokemon/{id}")
     fun getPokemonDetails(
         @Path("id") id: Int
-    ): Single<PokemonDetail>
+    ): Single<Pokemon>
 }

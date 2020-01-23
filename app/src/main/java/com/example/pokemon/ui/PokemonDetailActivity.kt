@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.example.pokemon.R
 import com.example.pokemon.contract.PokemonDetailContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.model.PokemonDetail
 import com.example.pokemon.presenter.PokemonDetailPresenterImpl
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.pokemon_detail.*
@@ -27,7 +26,8 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
         backButton.setOnClickListener { finish() }
 
-        intent.getParcelableExtra<Pokemon>("Pokemon")?.let {
+        val pokemon = intent.getSerializableExtra("Pokemon") as? Pokemon
+        pokemon?.let {
             pokemonDetailHeading.text = it.name
             nameOfPokemon.text = it.name
             Glide.with(this)
@@ -45,7 +45,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
         pokemonDetailSpinner.visibility = View.GONE
     }
 
-    override fun setPokemonDetails(response: PokemonDetail) {
+    override fun setPokemonDetails(response: Pokemon) {
 
         heightOfPokemon.text = "Height: ${response.height}m"
 
@@ -53,9 +53,9 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
         experienceOfPokemon.text = "Points: ${response.base_experience}"
 
-        movesofPokemon.text = "Moves: ${response.moves.size()}"
+        movesofPokemon.text = "Moves: ${response.moves?.size()}"
 
-        response.types.forEach {
+        response.types?.forEach {
             MaterialButton(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -74,7 +74,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
         }
 
-        response.abilities.forEach {
+        response.abilities?.forEach {
             MaterialButton(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,

@@ -1,8 +1,8 @@
 package com.example.pokemon.presenter
 
 import com.example.pokemon.contract.PokemonDetailContract
-import com.example.pokemon.model.PokemonDetail
-import com.example.pokemon.repository.PokemonRepository
+import com.example.pokemon.data.repository.PokemonRepository
+import com.example.pokemon.model.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -24,9 +24,9 @@ class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailCon
         )
     }
 
-    private fun populateDetails(pokemonDetail: PokemonDetail?) {
+    private fun populateDetails(pokemon: Pokemon?) {
 
-        pokemonDetail?.let {
+        pokemon?.let {
             pokemonDetailView?.setPokemonDetails(it)
             pokemonDetailView?.hideProgressBar()
         }
