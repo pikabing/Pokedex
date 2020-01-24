@@ -92,7 +92,7 @@ class PokemonAdapter(private val pokeList: ArrayList<Pokemon>, private val liste
 
     class ProgressBarViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
-    fun addData(pokeList: ArrayList<Pokemon>) {
+    fun addData(pokeList: List<Pokemon>) {
         val size = this.pokeList.size
         this.pokeList.addAll(pokeList)
         val sizeNew = this.pokeList.size

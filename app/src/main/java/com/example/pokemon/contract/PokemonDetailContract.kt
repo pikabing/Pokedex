@@ -14,7 +14,7 @@ interface PokemonDetailContract {
 
     interface PokemonDetailPresenter {
 
-        fun getPokemonDetails(id: Int)
+        fun getPokemonDetails(pokemon: Pokemon)
         fun onDestroy()
     }
 }

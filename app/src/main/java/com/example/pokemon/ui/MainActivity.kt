@@ -13,6 +13,7 @@ import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.presenter.MainPresenterImpl
 import com.example.pokemon.utils.PokemonItemDecoration
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContract.MainView {
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         pokemonAdapter = PokemonAdapter(pokeList) { id ->
             val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
             mainPresenterImpl?.getPokemon(id)?.let {
-                intent.putExtra("Pokemon", it)
+                intent.putExtra("Pokemon", Gson().toJson(it))
                 startActivity(intent)
             }
         }
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         pokemonRV.visibility = View.GONE
     }
 
-    override fun setPokemonAdapter(pokeList: ArrayList<Pokemon>) {
+    override fun setPokemonAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.handleLoading(false)
         pokemonAdapter?.addData(pokeList)
         isLoading = false

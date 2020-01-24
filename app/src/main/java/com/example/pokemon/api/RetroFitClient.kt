@@ -7,12 +7,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetroFitClient {
 
-    private const val BASE_URL = BuildConfig.BASE_URL
+    private const val URL = BuildConfig.BASE_URL
 
     val INSTANCE: PokemonService by lazy {
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()

@@ -1,18 +1,21 @@
 package com.example.pokemon.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.JsonArray
-import java.io.Serializable
 
-data class Pokemon(var name:String,
-                   val url: String,
-                   var id: String,
-                   val height: Int?,
-                   val weight: Int?,
-                   val base_experience: Int?,
-                   val types: ArrayList<Types>?,
-                   val abilities: ArrayList<Abilities>?,
-                   val moves: JsonArray?
-) : Serializable
+@Entity(tableName = "pokemon")
+data class Pokemon(
+    @PrimaryKey(autoGenerate = true) var id: Int,
+    var name: String,
+    var url: String,
+    var height: Int?,
+    var weight: Int?,
+    var base_experience: Int?,
+    var types: ArrayList<Types>?,
+    var abilities: ArrayList<Abilities>?,
+    var moves: JsonArray?
+)
 
 
 data class Abilities(val ability: Ability)

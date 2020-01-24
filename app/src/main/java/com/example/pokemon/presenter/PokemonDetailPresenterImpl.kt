@@ -1,6 +1,8 @@
 package com.example.pokemon.presenter
 
+import com.example.pokemon.MyApplication
 import com.example.pokemon.contract.PokemonDetailContract
+import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.data.repository.PokemonRepository
 import com.example.pokemon.model.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,11 +11,12 @@ import io.reactivex.schedulers.Schedulers
 
 class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailContract.PokemonDetailView?) : PokemonDetailContract.PokemonDetailPresenter {
 
-    private val pokemonRepository = PokemonRepository.instance
+    private val appDatabase = AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
+    private val pokemonRepository = PokemonRepository.getInstance(appDatabase)
     private val compositeDisposable = CompositeDisposable()
 
-    override fun getPokemonDetails(id: Int) {
-        compositeDisposable.add(pokemonRepository.getPokemonDetails(id)
+    override fun getPokemonDetails(pokemon: Pokemon) {
+        compositeDisposable.add(pokemonRepository.getPokemonDetails(pokemon)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -30,6 +33,7 @@ class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailCon
             pokemonDetailView?.setPokemonDetails(it)
             pokemonDetailView?.hideProgressBar()
         }
+        pokemonDetailView?.hideProgressBar()
 
     }
 
