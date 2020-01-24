@@ -30,8 +30,13 @@ class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailCon
     private fun populateDetails(pokemon: Pokemon?) {
 
         pokemon?.let {
-            pokemonDetailView?.setPokemonDetails(it)
-            pokemonDetailView?.hideProgressBar()
+            if(it.height == null) {
+                pokemonDetailView?.pokemonDetailsNotCached(it.name)
+            } else {
+                pokemonDetailView?.setPokemonDetails(it)
+                pokemonDetailView?.hideProgressBar()
+            }
+
         }
         pokemonDetailView?.hideProgressBar()
 

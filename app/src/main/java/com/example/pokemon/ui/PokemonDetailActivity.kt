@@ -2,6 +2,7 @@ package com.example.pokemon.ui
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -39,6 +40,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
             nameOfPokemon.text = it.name
             Glide.with(this)
                 .load(this.resources.getString(R.string.pokemon_image_url) + it.id + ".png")
+                .placeholder(R.drawable.placeholder)
                 .into(pokemonDetailImage)
 
             pokemonDetailPresenterImpl?.getPokemonDetails(it)
@@ -101,6 +103,14 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
         }
 
 
+    }
+
+    override fun pokemonDetailsNotCached(name: String) {
+        detailCLayout.visibility = View.GONE
+        pokemonDetailSpinner.visibility = View.GONE
+        val myToast = Toast.makeText(applicationContext,"${name.capitalize()}'s details couldn't be cached",Toast.LENGTH_SHORT)
+        myToast.setGravity(0,0,0)
+        myToast.show()
     }
 
     override fun showErrorToast() {

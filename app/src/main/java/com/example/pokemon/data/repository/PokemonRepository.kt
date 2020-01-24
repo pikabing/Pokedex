@@ -1,6 +1,5 @@
 package com.example.pokemon.data.repository
 
-import android.util.Log
 import com.example.pokemon.MyApplication
 import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.data.db.AppDatabase
@@ -52,7 +51,6 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
     }
 
     private fun getPokemonDetailFromDB(id: Int): Maybe<Pokemon> {
-        Log.e("TAG","DETAIL DB")
         return mAppDatabase.pokemonDao().fetchPokemonDetail(id)
     }
 

@@ -83,6 +83,7 @@ class PokemonAdapter(private val pokeList: ArrayList<Pokemon>, private val liste
             itemView.pokemonCardTitle.text = pokemon.name
             Glide.with(itemView)
                 .load(itemView.resources.getString(R.string.pokemon_image_url) + pokemon.id + ".png")
+                .placeholder(R.drawable.placeholder)
                 .into(itemView.pokemonCardImage)
             itemView.setOnClickListener {
                 listener.invoke(pos)

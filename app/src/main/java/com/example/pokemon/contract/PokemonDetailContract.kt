@@ -8,6 +8,7 @@ interface PokemonDetailContract {
 
         fun hideProgressBar()
         fun setPokemonDetails(pokemon: Pokemon)
+        fun pokemonDetailsNotCached(name: String)
         fun showErrorToast()
 
     }
