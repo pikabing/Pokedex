@@ -2,7 +2,6 @@ package com.example.pokemon.api
 
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonResponse
-import io.reactivex.Maybe
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
