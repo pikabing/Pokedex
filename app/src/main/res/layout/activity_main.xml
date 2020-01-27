@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_constrainedHeight="true"
     tools:context=".ui.MainActivity"
     android:background="@android:color/white">
 
@@ -27,23 +28,20 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Pokemons"
+        android:text="@string/app_name"
         android:textAlignment="center"
         />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pokemonRV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headingMain"
-        android:paddingBottom="60dp"
-        android:background="@android:color/white"
-        android:scrollbars="vertical"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
         />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

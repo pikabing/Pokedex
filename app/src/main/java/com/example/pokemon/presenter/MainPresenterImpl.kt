@@ -25,7 +25,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
         if (offset > 960)
             return
 
-        callPokemonApi(offset)
+        getPokemonsFromRepo(offset)
         offset += 8
 
     }
@@ -38,7 +38,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
         AppDatabase.destroyDataBase()
     }
 
-    private fun callPokemonApi(offset: Int) {
+    private fun getPokemonsFromRepo(offset: Int) {
 
         compositeDisposable.add(pokemonRepository.getPokemonList(offset)
             .subscribeOn(Schedulers.io())
@@ -59,11 +59,6 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
     @SuppressLint("DefaultLocale")
     private fun populateList(response: List<Pokemon>) {
         response.let {
-            response.map {
-                val tokens = it.url.split("/")
-                it.id = tokens[tokens.lastIndex - 1].toInt()
-                it.name = it.name.capitalize()
-            }
             pokeList.addAll(response)
             mainView?.setPokemonAdapter(response)
             mainView?.showPokemonRV()

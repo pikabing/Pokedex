@@ -6,7 +6,7 @@ import com.google.gson.JsonArray
 
 @Entity(tableName = "pokemon")
 data class Pokemon(
-    @PrimaryKey(autoGenerate = true) var id: Int,
+    @PrimaryKey(autoGenerate = false) var id: Int,
     var name: String,
     var url: String,
     var height: Int?,
@@ -14,7 +14,8 @@ data class Pokemon(
     var base_experience: Int?,
     var types: ArrayList<Types>?,
     var abilities: ArrayList<Abilities>?,
-    var moves: JsonArray?
+    var moves: JsonArray?,
+    var favorite: Boolean = false
 )
 
 

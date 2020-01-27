@@ -47,10 +47,12 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation "io.reactivex.rxjava2:rxjava:2.2.7"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
     //room
     implementation "androidx.room:room-rxjava2:2.2.3"
     kapt "androidx.room:room-compiler:2.2.3"
+    //spark button
+    implementation 'com.github.varunest:sparkbutton:1.0.6'
 
 }

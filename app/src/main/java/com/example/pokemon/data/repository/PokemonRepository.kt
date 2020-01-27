@@ -55,9 +55,14 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
     }
 
     private fun makePokemonListApiCall(offset: Int) = RetroFitClient.INSTANCE.getPokemons(offset, 8)
-        .map {
-            mAppDatabase.pokemonDao().insert(it.results)
-            it.results
+        .map { pokemonResponse ->
+            mAppDatabase.pokemonDao().insert(pokemonResponse.results.map {
+                val tokens = it.url.split("/")
+                it.id = tokens[tokens.lastIndex - 1].toInt()
+                it.name = it.name.capitalize()
+                it
+            })
+            pokemonResponse.results
         }
 
     private fun getPokemonListFromDB(): Single<List<Pokemon>> {
