@@ -1,7 +1,6 @@
 package com.example.pokemon.data.repository
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.example.pokemon.MyApplication
 import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.data.db.AppDatabase
@@ -44,7 +43,6 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
 
     @SuppressLint("CheckResult")
     fun setFavoritePokemon(pokemon: Pokemon, buttonState: Boolean) {
-        Log.e("HERE", "HERE")
         Single.just(pokemon)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
@@ -58,15 +56,13 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
             })
     }
 
-    private fun favoritePokemon(pokemon: Pokemon) {
-        Log.e("FAVORITE", "YES")
+    private fun favoritePokemon(pokemon: Pokemon) =
         mAppDatabase.pokemonDao().setFavorite(pokemon.id, true)
-    }
 
-    private fun unFavoritePokemon(pokemon: Pokemon) {
-        Log.e("FAVORITE", "NO")
+
+    private fun unFavoritePokemon(pokemon: Pokemon) =
         mAppDatabase.pokemonDao().setFavorite(pokemon.id, false)
-    }
+
 
     private fun makePokemonDetailApiCall(pokemon: Pokemon): Single<Pokemon> {
         return RetroFitClient.INSTANCE.getPokemonDetails(pokemon.id)
