@@ -1,5 +1,7 @@
 package com.example.pokemon.data.repository
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.example.pokemon.MyApplication
 import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.data.db.AppDatabase
@@ -7,6 +9,7 @@ import com.example.pokemon.model.Pokemon
 import com.example.pokemon.utils.Common
 import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class PokemonRepository private constructor(private val mAppDatabase: AppDatabase) {
 
@@ -37,6 +40,32 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
         else
             getPokemonDetailFromDB(pokemon.id).switchIfEmpty(makePokemonDetailApiCall(pokemon))
 
+    }
+
+    @SuppressLint("CheckResult")
+    fun setFavoritePokemon(pokemon: Pokemon, buttonState: Boolean) {
+        Log.e("HERE", "HERE")
+        Single.just(pokemon)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({
+                if (buttonState)
+                    favoritePokemon(it)
+                else
+                    unFavoritePokemon(it)
+            }, {
+                it.printStackTrace()
+            })
+    }
+
+    private fun favoritePokemon(pokemon: Pokemon) {
+        Log.e("FAVORITE", "YES")
+        mAppDatabase.pokemonDao().setFavorite(pokemon.id, true)
+    }
+
+    private fun unFavoritePokemon(pokemon: Pokemon) {
+        Log.e("FAVORITE", "NO")
+        mAppDatabase.pokemonDao().setFavorite(pokemon.id, false)
     }
 
     private fun makePokemonDetailApiCall(pokemon: Pokemon): Single<Pokemon> {

@@ -15,8 +15,10 @@ import com.example.pokemon.presenter.MainPresenterImpl
 import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.pokemon_list.*
 
-class MainActivity : AppCompatActivity(), MainContract.MainView {
+class MainActivity : AppCompatActivity(), MainContract.MainView,
+    PokemonAdapter.PokemonAdapterListener {
 
     private val isLastPage: Boolean = false
     private var isLoading: Boolean = false
@@ -30,13 +32,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         setContentView(R.layout.activity_main)
 
         mainPresenterImpl = MainPresenterImpl(this)
-        pokemonAdapter = PokemonAdapter(pokeList) { id ->
-            val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
-            mainPresenterImpl?.getPokemon(id)?.let {
-                intent.putExtra("Pokemon", Gson().toJson(it))
-                startActivity(intent)
-            }
-        }
+        pokemonAdapter = PokemonAdapter(pokeList, this)
         hidePokemonRV()
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
@@ -84,7 +80,25 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
     override fun onDestroy() {
         super.onDestroy()
+        pokemonAdapter?.setListenerToNull()
         mainPresenterImpl?.onDestroy()
+    }
+
+    override fun cardOnClick(pokemon: Pokemon) {
+        val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
+        mainPresenterImpl?.getPokemon(pokemon.id)?.let {
+            intent.putExtra("Pokemon", Gson().toJson(it))
+            startActivity(intent)
+        }
+    }
+
+    override fun favoriteButtonOn(pokemon: Pokemon) {
+        mainPresenterImpl?.setFavorite(pokemon, true)
+    }
+
+    override fun favoriteButtonOff(pokemon: Pokemon) {
+        favoriteButtonInList.playAnimation()
+        mainPresenterImpl?.setFavorite(pokemon, false)
     }
 
 

@@ -14,6 +14,7 @@ interface MainContract {
     interface MainPresenter {
         fun loadMorePokemons()
         fun getPokemon(id: Int): Pokemon
+        fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun onDestroy()
     }
 }

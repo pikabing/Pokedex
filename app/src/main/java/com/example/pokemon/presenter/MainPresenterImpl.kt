@@ -7,6 +7,7 @@ import com.example.pokemon.contract.MainContract
 import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.data.repository.PokemonRepository
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -31,6 +32,8 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
     }
 
     override fun getPokemon(id: Int) = pokeList[id]
+
+    override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) = pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
     override fun onDestroy() {
         mainView = null
