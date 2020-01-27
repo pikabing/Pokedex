@@ -1,6 +1,7 @@
 package com.example.pokemon.data.repository
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.example.pokemon.MyApplication
 import com.example.pokemon.api.RetroFitClient
 import com.example.pokemon.data.db.AppDatabase
@@ -31,6 +32,8 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
 
     }
 
+    fun getFavoritePokemonsList() = mAppDatabase.pokemonDao().fetchFavoriteList()
+
 
     fun getPokemonDetails(pokemon: Pokemon): Single<Pokemon> {
 
@@ -56,12 +59,14 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
             })
     }
 
-    private fun favoritePokemon(pokemon: Pokemon) =
+    private fun favoritePokemon(pokemon: Pokemon) {
         mAppDatabase.pokemonDao().setFavorite(pokemon.id, true)
+    }
 
 
-    private fun unFavoritePokemon(pokemon: Pokemon) =
+    private fun unFavoritePokemon(pokemon: Pokemon) {
         mAppDatabase.pokemonDao().setFavorite(pokemon.id, false)
+    }
 
 
     private fun makePokemonDetailApiCall(pokemon: Pokemon): Single<Pokemon> {
@@ -81,10 +86,14 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
 
     private fun makePokemonListApiCall(offset: Int) = RetroFitClient.INSTANCE.getPokemons(offset, 8)
         .map { pokemonResponse ->
+            val favoriteIds = mAppDatabase.pokemonDao().getFavoritePokemonsID()
             mAppDatabase.pokemonDao().insert(pokemonResponse.results.map {
                 val tokens = it.url.split("/")
                 it.id = tokens[tokens.lastIndex - 1].toInt()
                 it.name = it.name.capitalize()
+                if (it.id in favoriteIds) {
+                    it.favorite = true
+                }
                 it
             })
             pokemonResponse.results

@@ -2,7 +2,6 @@ package com.example.pokemon.ui
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -16,7 +15,7 @@ import com.example.pokemon.presenter.PokemonDetailPresenterImpl
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import com.varunest.sparkbutton.SparkEventListener
-import kotlinx.android.synthetic.main.pokemon_detail.*
+import kotlinx.android.synthetic.main.activity_pokemon_detail.*
 
 class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.PokemonDetailView {
 
@@ -24,7 +23,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.pokemon_detail)
+        setContentView(R.layout.activity_pokemon_detail)
 
         pokemonDetailPresenterImpl = PokemonDetailPresenterImpl(this)
 

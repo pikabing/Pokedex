@@ -3,6 +3,7 @@ package com.example.pokemon.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -53,8 +54,15 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
 
         })
 
-        var sidePadding = resources.getDimensionPixelSize(R.dimen.sidePadding)
+        val sidePadding = resources.getDimensionPixelSize(R.dimen.sidePadding)
         pokemonRV.addItemDecoration(PokemonItemDecoration(sidePadding))
+
+        //open favorites activity
+        favorites.setOnClickListener {
+            val intent = Intent(this@MainActivity, FavoritesActivity::class.java)
+            startActivity(intent)
+
+        }
 
     }
 

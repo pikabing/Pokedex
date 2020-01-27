@@ -1,5 +1,6 @@
 package com.example.pokemon.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,10 @@ import com.varunest.sparkbutton.SparkEventListener
 import kotlinx.android.synthetic.main.pokemon_list.view.*
 
 
-class PokemonAdapter(private val pokeList: ArrayList<Pokemon>, private var listener: PokemonAdapterListener?) :
+class PokemonAdapter(
+    private val pokeList: ArrayList<Pokemon>,
+    private var listener: PokemonAdapterListener?
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_LOADER = 0
@@ -82,35 +86,35 @@ class PokemonAdapter(private val pokeList: ArrayList<Pokemon>, private var liste
     class PokemonViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
 
-        fun bind(pokemon: Pokemon, pokemonAdapterListener: PokemonAdapterListener?) = with(itemView) {
-            itemView.pokemonCardTitle.text = pokemon.name
-            Glide.with(itemView)
-                .load(itemView.resources.getString(R.string.pokemon_image_url) + pokemon.id + ".png")
-                .placeholder(R.drawable.placeholder)
-                .into(itemView.pokemonCardImage)
-            itemView.setOnClickListener {
-                pokemonAdapterListener?.cardOnClick(pokemon)
-            }
-            itemView.favoriteButtonInList.setEventListener(object : SparkEventListener{
-                override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {
-
+        fun bind(pokemon: Pokemon, pokemonAdapterListener: PokemonAdapterListener?) =
+            with(itemView) {
+                itemView.pokemonCardTitle.text = pokemon.name
+                Glide.with(itemView)
+                    .load(itemView.resources.getString(R.string.pokemon_image_url) + pokemon.id + ".png")
+                    .placeholder(R.drawable.placeholder)
+                    .into(itemView.pokemonCardImage)
+                itemView.setOnClickListener {
+                    pokemonAdapterListener?.cardOnClick(pokemon)
                 }
-
-                override fun onEvent(button: ImageView?, buttonState: Boolean) {
-                    if (buttonState) {
-                        pokemonAdapterListener?.favoriteButtonOn(pokemon)
-                    } else {
-                        pokemonAdapterListener?.favoriteButtonOff(pokemon)
+                itemView.favoriteButtonInList.isChecked = pokemon.favorite
+                itemView.favoriteButtonInList.setEventListener(object : SparkEventListener{
+                    override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {
                     }
-                }
 
-                override fun onEventAnimationStart(button: ImageView?, buttonState: Boolean) {
+                    override fun onEvent(button: ImageView?, buttonState: Boolean) {
+                        if (buttonState) {
+                            pokemonAdapterListener?.favoriteButtonOn(pokemon)
+                        } else {
+                            pokemonAdapterListener?.favoriteButtonOff(pokemon)
+                        }
+                    }
 
-                }
+                    override fun onEventAnimationStart(button: ImageView?, buttonState: Boolean) {
+                    }
 
-            })
+                })
 
-        }
+            }
 
     }
 
