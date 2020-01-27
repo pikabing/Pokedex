@@ -83,6 +83,7 @@ class PokemonAdapter(private val pokeList: ArrayList<Pokemon>, private val liste
             itemView.pokemonCardTitle.text = pokemon.name
             Glide.with(itemView)
                 .load(itemView.resources.getString(R.string.pokemon_image_url) + pokemon.id + ".png")
+                .placeholder(R.drawable.placeholder)
                 .into(itemView.pokemonCardImage)
             itemView.setOnClickListener {
                 listener.invoke(pos)
@@ -92,7 +93,7 @@ class PokemonAdapter(private val pokeList: ArrayList<Pokemon>, private val liste
 
     class ProgressBarViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
-    fun addData(pokeList: ArrayList<Pokemon>) {
+    fun addData(pokeList: List<Pokemon>) {
         val size = this.pokeList.size
         this.pokeList.addAll(pokeList)
         val sizeNew = this.pokeList.size

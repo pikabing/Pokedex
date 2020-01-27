@@ -1,20 +1,21 @@
 package com.example.pokemon.contract
 
-import com.example.pokemon.model.PokemonDetail
+import com.example.pokemon.model.Pokemon
 
 interface PokemonDetailContract {
 
     interface PokemonDetailView {
 
         fun hideProgressBar()
-        fun setPokemonDetails(pokemonDetail: PokemonDetail)
+        fun setPokemonDetails(pokemon: Pokemon)
+        fun pokemonDetailsNotCached(name: String)
         fun showErrorToast()
 
     }
 
     interface PokemonDetailPresenter {
 
-        fun getPokemonDetails(id: Int)
+        fun getPokemonDetails(pokemon: Pokemon)
         fun onDestroy()
     }
 }

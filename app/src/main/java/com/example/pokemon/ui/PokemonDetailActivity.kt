@@ -2,6 +2,7 @@ package com.example.pokemon.ui
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -10,9 +11,9 @@ import com.bumptech.glide.Glide
 import com.example.pokemon.R
 import com.example.pokemon.contract.PokemonDetailContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.model.PokemonDetail
 import com.example.pokemon.presenter.PokemonDetailPresenterImpl
 import com.google.android.material.button.MaterialButton
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.pokemon_detail.*
 
 class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.PokemonDetailView {
@@ -27,14 +28,22 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
         backButton.setOnClickListener { finish() }
 
-        intent.getParcelableExtra<Pokemon>("Pokemon")?.let {
+        val pokemonString = intent.extras?.getString("Pokemon")
+        var pokemon: Pokemon? = null
+
+        if (pokemonString != null) {
+            pokemon = Gson().fromJson(pokemonString, Pokemon::class.java)
+        }
+
+        pokemon?.let {
             pokemonDetailHeading.text = it.name
             nameOfPokemon.text = it.name
             Glide.with(this)
                 .load(this.resources.getString(R.string.pokemon_image_url) + it.id + ".png")
+                .placeholder(R.drawable.placeholder)
                 .into(pokemonDetailImage)
 
-            pokemonDetailPresenterImpl?.getPokemonDetails(it.id.toInt())
+            pokemonDetailPresenterImpl?.getPokemonDetails(it)
         }
 
     }
@@ -45,17 +54,17 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
         pokemonDetailSpinner.visibility = View.GONE
     }
 
-    override fun setPokemonDetails(response: PokemonDetail) {
+    override fun setPokemonDetails(pokemon: Pokemon) {
 
-        heightOfPokemon.text = "Height: ${response.height}m"
+        heightOfPokemon.text = "Height: ${pokemon.height}m"
 
-        weightOfPokemon.text = "Weight: ${response.weight}g"
+        weightOfPokemon.text = "Weight: ${pokemon.weight}g"
 
-        experienceOfPokemon.text = "Points: ${response.base_experience}"
+        experienceOfPokemon.text = "Points: ${pokemon.base_experience}"
 
-        movesofPokemon.text = "Moves: ${response.moves.size()}"
+        movesofPokemon.text = "Moves: ${pokemon.moves?.size()}"
 
-        response.types.forEach {
+        pokemon.types?.forEach {
             MaterialButton(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -74,7 +83,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
         }
 
-        response.abilities.forEach {
+        pokemon.abilities?.forEach {
             MaterialButton(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -96,11 +105,22 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
     }
 
-    override fun showErrorToast() = Toast.makeText(
-        this@PokemonDetailActivity,
-        "Failed to get details",
-        Toast.LENGTH_LONG
-    ).show()
+    override fun pokemonDetailsNotCached(name: String) {
+        detailCLayout.visibility = View.GONE
+        pokemonDetailSpinner.visibility = View.GONE
+        val myToast = Toast.makeText(applicationContext,"${name.capitalize()}'s details couldn't be cached",Toast.LENGTH_SHORT)
+        myToast.setGravity(0,0,0)
+        myToast.show()
+    }
+
+    override fun showErrorToast() {
+        Toast.makeText(
+            this@PokemonDetailActivity,
+            "Failed to get details",
+            Toast.LENGTH_LONG
+        ).show()
+        hideProgressBar()
+    }
 
     override fun onDestroy() {
         super.onDestroy()

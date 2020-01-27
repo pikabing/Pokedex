@@ -1,9 +1,12 @@
 package com.example.pokemon.presenter
 
 import android.annotation.SuppressLint
+import android.util.Log
+import com.example.pokemon.MyApplication
 import com.example.pokemon.contract.MainContract
+import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.repository.PokemonRepository
+import com.example.pokemon.data.repository.PokemonRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -13,7 +16,8 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
-    private val pokemonRepository = PokemonRepository.instance
+    private val appDatabase = AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
+    private val pokemonRepository = PokemonRepository.getInstance(appDatabase)
     private val compositeDisposable = CompositeDisposable()
 
     override fun loadMorePokemons() {
@@ -31,6 +35,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
     override fun onDestroy() {
         mainView = null
         compositeDisposable.dispose()
+        AppDatabase.destroyDataBase()
     }
 
     private fun callPokemonApi(offset: Int) {
@@ -44,6 +49,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
                 }
             }, {
                 mainView?.showErrorToast()
+                Log.e("ERROR","" + it.message)
             }
             ))
 
@@ -51,11 +57,11 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
 
     @SuppressLint("DefaultLocale")
-    private fun populateList(response: ArrayList<Pokemon>) {
+    private fun populateList(response: List<Pokemon>) {
         response.let {
             response.map {
                 val tokens = it.url.split("/")
-                it.id = tokens[tokens.lastIndex - 1]
+                it.id = tokens[tokens.lastIndex - 1].toInt()
                 it.name = it.name.capitalize()
             }
             pokeList.addAll(response)

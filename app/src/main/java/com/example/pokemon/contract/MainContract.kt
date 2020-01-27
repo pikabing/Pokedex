@@ -7,7 +7,7 @@ interface MainContract {
     interface MainView {
         fun showPokemonRV()
         fun hidePokemonRV()
-        fun setPokemonAdapter(pokeList: ArrayList<Pokemon>)
+        fun setPokemonAdapter(pokeList: List<Pokemon>)
         fun showErrorToast()
     }
 

@@ -1,7 +1,24 @@
 package com.example.pokemon.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.google.gson.JsonArray
 
-@Parcelize
-data class Pokemon(var name:String, val url: String, var id: String) : Parcelable
+@Entity(tableName = "pokemon")
+data class Pokemon(
+    @PrimaryKey(autoGenerate = true) var id: Int,
+    var name: String,
+    var url: String,
+    var height: Int?,
+    var weight: Int?,
+    var base_experience: Int?,
+    var types: ArrayList<Types>?,
+    var abilities: ArrayList<Abilities>?,
+    var moves: JsonArray?
+)
+
+
+data class Abilities(val ability: Ability)
+data class Types(val type: Type)
+data class Ability(val name: String)
+data class Type(val name: String)
