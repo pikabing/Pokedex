@@ -5,9 +5,9 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 
-class PokemonItemDecoration(var spacing: Int) : RecyclerView.ItemDecoration() {
+class PokemonItemDecoration(private var spacing: Int) : RecyclerView.ItemDecoration() {
 
-    val gridSize = 2
+    private val gridSize = 2
     private var mNeedLeftSpacing = false
 
     override fun getItemOffsets(
@@ -16,8 +16,8 @@ class PokemonItemDecoration(var spacing: Int) : RecyclerView.ItemDecoration() {
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val frameWidth = ((parent.getWidth() - spacing * (gridSize - 1)) / gridSize)
-        val padding: Int = parent.getWidth() / gridSize - frameWidth
+        val frameWidth = ((parent.width - spacing * (gridSize - 1)) / gridSize)
+        val padding: Int = parent.width/ gridSize - frameWidth
         val itemPosition =
             (view.layoutParams as RecyclerView.LayoutParams).viewAdapterPosition
         if (itemPosition < gridSize) {
