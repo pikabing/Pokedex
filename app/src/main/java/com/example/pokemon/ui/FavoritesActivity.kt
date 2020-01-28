@@ -14,7 +14,6 @@ import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_favorites.*
 import kotlinx.android.synthetic.main.activity_favorites.backButton
-import kotlinx.android.synthetic.main.pokemon_list.*
 
 class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, PokemonAdapter.PokemonAdapterListener {
 
@@ -62,7 +61,6 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, P
     }
 
     override fun favoriteButtonOff(pokemon: Pokemon) {
-//        favoriteButtonInList.playAnimation()
         pokemonAdapter?.removePokemonFromFavorite(pokemon)
         favoritePresenterImpl?.setFavorite(pokemon, false)
     }

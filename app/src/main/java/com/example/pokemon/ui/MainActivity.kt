@@ -3,7 +3,6 @@ package com.example.pokemon.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -16,7 +15,6 @@ import com.example.pokemon.presenter.MainPresenterImpl
 import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.pokemon_list.*
 
 class MainActivity : AppCompatActivity(), MainContract.MainView,
     PokemonAdapter.PokemonAdapterListener {
@@ -105,7 +103,6 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
     }
 
     override fun favoriteButtonOff(pokemon: Pokemon) {
-        favoriteButtonInList.playAnimation()
         mainPresenterImpl?.setFavorite(pokemon, false)
     }
 

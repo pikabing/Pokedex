@@ -1,6 +1,5 @@
 package com.example.pokemon.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,7 +96,6 @@ class PokemonAdapter(
                     pokemonAdapterListener?.cardOnClick(pokemon)
                 }
                 itemView.favoriteButtonInList.isChecked = pokemon.favorite
-//                Log.e("FAV", pokemon.name + " " + pokemon.favorite)
                 itemView.favoriteButtonInList.setEventListener(object : SparkEventListener{
                     override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {
                     }
@@ -108,6 +106,8 @@ class PokemonAdapter(
                         } else {
                             pokemonAdapterListener?.favoriteButtonOff(pokemon)
                         }
+                        pokemon.favorite = buttonState
+                        favoriteButtonInList.playAnimation()
                     }
 
                     override fun onEventAnimationStart(button: ImageView?, buttonState: Boolean) {
