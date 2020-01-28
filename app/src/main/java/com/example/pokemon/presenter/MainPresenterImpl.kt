@@ -1,7 +1,6 @@
 package com.example.pokemon.presenter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.example.pokemon.MyApplication
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.data.db.AppDatabase
@@ -16,7 +15,8 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
-    private val appDatabase = AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
+    private val appDatabase =
+        AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
     private val pokemonRepository = PokemonRepository.getInstance(appDatabase)
     private val compositeDisposable = CompositeDisposable()
 
@@ -30,9 +30,22 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
     }
 
+    override fun getPokemonDetailsFromDb(){
+        compositeDisposable.add(
+            pokemonRepository.getPokemonListFromDB().subscribeOn(Schedulers.io()).observeOn(
+                AndroidSchedulers.mainThread()
+            ).subscribe({
+                rePopulateList(it)
+            }, {
+                it.printStackTrace()
+            })
+        )
+    }
+
     override fun getPokemon(id: Int) = pokeList[id]
 
-    override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) = pokemonRepository.setFavoritePokemon(pokemon, buttonState)
+    override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) =
+        pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
     override fun onDestroy() {
         mainView = null
@@ -65,5 +78,12 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
             mainView?.showPokemonRV()
         }
 
+    }
+
+    private fun rePopulateList(response: List<Pokemon>) {
+        response?.let {
+            pokeList = ArrayList(it)
+            mainView?.resetPokemonList(it)
+        }
     }
 }

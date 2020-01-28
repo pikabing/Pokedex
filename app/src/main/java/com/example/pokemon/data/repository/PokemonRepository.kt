@@ -79,9 +79,9 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
             }
     }
 
-    private fun getPokemonDetailFromDB(id: Int): Maybe<Pokemon> {
-        return mAppDatabase.pokemonDao().fetchPokemonDetail(id)
-    }
+    private fun getPokemonDetailFromDB(id: Int): Maybe<Pokemon> =
+        mAppDatabase.pokemonDao().fetchPokemonDetail(id)
+
 
     private fun makePokemonListApiCall(offset: Int) = RetroFitClient.INSTANCE.getPokemons(offset, 8)
         .map { pokemonResponse ->
@@ -98,7 +98,8 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
             pokemonResponse.results
         }
 
-    private fun getPokemonListFromDB(): Single<List<Pokemon>> = mAppDatabase.pokemonDao().fetchPokemonList()
+    fun getPokemonListFromDB(): Single<List<Pokemon>> =
+        mAppDatabase.pokemonDao().fetchPokemonList()
 
 }
 

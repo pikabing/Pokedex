@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.pokemon_list.view.*
 
 
 class PokemonAdapter(
-    private val pokeList: ArrayList<Pokemon>,
+    private var pokeList: ArrayList<Pokemon>,
     private var listener: PokemonAdapterListener?
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -126,6 +126,11 @@ class PokemonAdapter(
         this.pokeList.addAll(pokeList)
         val sizeNew = this.pokeList.size
         notifyItemRangeInserted(size, sizeNew)
+    }
+
+    fun updateData(pokeList: List<Pokemon>) {
+        this.pokeList = ArrayList(pokeList)
+        notifyDataSetChanged()
     }
 
     fun removePokemonFromFavorite(pokemon: Pokemon) {

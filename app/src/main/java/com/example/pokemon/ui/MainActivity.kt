@@ -3,6 +3,7 @@ package com.example.pokemon.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -64,6 +65,11 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        mainPresenterImpl?.getPokemonDetailsFromDb()
+    }
+
     override fun showPokemonRV() {
         pokemonRV.visibility = View.VISIBLE
         mainScreenLoader.visibility = View.GONE
@@ -78,6 +84,10 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
         pokemonAdapter?.addData(pokeList)
         isLoading = false
 
+    }
+
+    override fun resetPokemonList(pokeList: List<Pokemon>) {
+        pokemonAdapter?.updateData(pokeList)
     }
 
     override fun showErrorToast() {
