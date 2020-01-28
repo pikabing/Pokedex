@@ -62,7 +62,8 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, P
     }
 
     override fun favoriteButtonOff(pokemon: Pokemon) {
-        favoriteButtonInList.playAnimation()
+//        favoriteButtonInList.playAnimation()
+        pokemonAdapter?.removePokemonFromFavorite(pokemon)
         favoritePresenterImpl?.setFavorite(pokemon, false)
     }
 }

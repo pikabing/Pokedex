@@ -97,6 +97,7 @@ class PokemonAdapter(
                     pokemonAdapterListener?.cardOnClick(pokemon)
                 }
                 itemView.favoriteButtonInList.isChecked = pokemon.favorite
+//                Log.e("FAV", pokemon.name + " " + pokemon.favorite)
                 itemView.favoriteButtonInList.setEventListener(object : SparkEventListener{
                     override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {
                     }
@@ -125,6 +126,11 @@ class PokemonAdapter(
         this.pokeList.addAll(pokeList)
         val sizeNew = this.pokeList.size
         notifyItemRangeInserted(size, sizeNew)
+    }
+
+    fun removePokemonFromFavorite(pokemon: Pokemon) {
+        notifyItemRemoved(pokeList.indexOf(pokemon))
+        pokeList.remove(pokemon)
     }
 
     fun setListenerToNull() {
