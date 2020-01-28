@@ -74,6 +74,7 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
                 it.id = pokemon.id
                 it.name = pokemon.name
                 it.url = pokemon.url
+                it.favorite = pokemon.favorite
                 mAppDatabase.pokemonDao().update(it)
                 it
             }

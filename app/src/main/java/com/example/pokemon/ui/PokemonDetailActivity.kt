@@ -43,7 +43,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
                 .load(this.resources.getString(R.string.pokemon_image_url) + it.id + ".png")
                 .placeholder(R.drawable.placeholder)
                 .into(pokemonDetailImage)
-
+            favoriteButtonInDetail.isChecked = it.favorite
             pokemonDetailPresenterImpl?.getPokemonDetails(it)
         }
 
@@ -135,7 +135,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
     }
 
     override fun makePokemonFavorite(pokemon: Pokemon, buttonState: Boolean) {
-
+        pokemonDetailPresenterImpl?.setFavorite(pokemon, buttonState)
     }
 
     override fun showErrorToast() {

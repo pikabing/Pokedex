@@ -42,7 +42,13 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
         )
     }
 
-    override fun getPokemon(id: Int) = pokeList[id]
+    override fun getPokemon(id: Int): Pokemon {
+        return if (id > 0) {
+            pokeList[id - 1]
+        } else {
+            pokeList[0]
+        }
+    }
 
     override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) =
         pokemonRepository.setFavoritePokemon(pokemon, buttonState)
