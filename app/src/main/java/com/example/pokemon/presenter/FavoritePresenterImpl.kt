@@ -24,8 +24,8 @@ class FavoritePresenterImpl(private var favoriteView: FavoritesContract.Favorite
                 AndroidSchedulers.mainThread()
             ).subscribe({
                 it?.let {
-                    pokeList.addAll(it)
-                    favoriteView?.setPokemonAdapter(it)
+                    pokeList = ArrayList(it)
+                    favoriteView?.setPokemonAdapter(pokeList)
                 }
             }, {
                 favoriteView?.showErrorToast()

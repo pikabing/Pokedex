@@ -34,14 +34,16 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, P
         val sidePadding = resources.getDimensionPixelSize(R.dimen.sidePadding)
         favorites_list.addItemDecoration(PokemonItemDecoration(sidePadding))
 
-        favoritePresenterImpl?.getFavoriteList()
-
         backButton.setOnClickListener { finish() }
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        favoritePresenterImpl?.getFavoriteList()
+    }
     override fun setPokemonAdapter(pokeList: List<Pokemon>) {
-        pokemonAdapter?.addData(pokeList)
+        pokemonAdapter?.updateData(pokeList)
     }
 
     override fun showErrorToast() {
