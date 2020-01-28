@@ -93,7 +93,7 @@ class PokemonAdapter(
                     .placeholder(R.drawable.placeholder)
                     .into(itemView.pokemonCardImage)
                 itemView.setOnClickListener {
-                    pokemonAdapterListener?.cardOnClick(pokemon)
+                    pokemonAdapterListener?.cardOnClick(pokemon, adapterPosition)
                 }
                 itemView.favoriteButtonInList.isChecked = pokemon.favorite
                 itemView.favoriteButtonInList.setEventListener(object : SparkEventListener{
@@ -144,7 +144,7 @@ class PokemonAdapter(
     }
 
     interface PokemonAdapterListener {
-        fun cardOnClick(pokemon: Pokemon)
+        fun cardOnClick(pokemon: Pokemon, position: Int)
         fun favoriteButtonOn(pokemon: Pokemon)
         fun favoriteButtonOff(pokemon: Pokemon)
     }

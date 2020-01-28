@@ -99,9 +99,9 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
         mainPresenterImpl?.onDestroy()
     }
 
-    override fun cardOnClick(pokemon: Pokemon) {
+    override fun cardOnClick(pokemon: Pokemon, position: Int) {
         val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
-        mainPresenterImpl?.getPokemon(pokemon.id)?.let {
+        mainPresenterImpl?.getPokemon(position)?.let {
             intent.putExtra("Pokemon", Gson().toJson(it))
             startActivity(intent)
         }

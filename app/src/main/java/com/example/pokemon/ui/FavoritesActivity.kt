@@ -48,9 +48,9 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, P
         Toast.makeText(this, "Error retrieving favorite Pokemon list",Toast.LENGTH_SHORT).show()
     }
 
-    override fun cardOnClick(pokemon: Pokemon) {
+    override fun cardOnClick(pokemon: Pokemon, position: Int) {
         val intent = Intent(this, PokemonDetailActivity::class.java)
-        favoritePresenterImpl?.getPokemon(pokemon.id)?.let {
+        favoritePresenterImpl?.getPokemon(position)?.let {
             intent.putExtra("Pokemon", Gson().toJson(it))
             startActivity(intent)
         }
