@@ -81,7 +81,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
     }
 
     private fun rePopulateList(response: List<Pokemon>) {
-        response?.let {
+        response.let {
             pokeList = ArrayList(it)
             mainView?.resetPokemonList(it)
         }
