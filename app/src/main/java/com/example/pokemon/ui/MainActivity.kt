@@ -16,7 +16,8 @@ import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MainContract.MainView {
+class MainActivity : AppCompatActivity(), MainContract.MainView,
+    PokemonAdapter.PokemonAdapterListener {
 
     private val isLastPage: Boolean = false
     private var isLoading: Boolean = false
@@ -30,13 +31,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
         setContentView(R.layout.activity_main)
 
         mainPresenterImpl = MainPresenterImpl(this)
-        pokemonAdapter = PokemonAdapter(pokeList) { id ->
-            val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
-            mainPresenterImpl?.getPokemon(id)?.let {
-                intent.putExtra("Pokemon", Gson().toJson(it))
-                startActivity(intent)
-            }
-        }
+        pokemonAdapter = PokemonAdapter(pokeList, this)
         hidePokemonRV()
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
@@ -57,9 +52,21 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
         })
 
-        var sidePadding = resources.getDimensionPixelSize(R.dimen.sidePadding)
+        val sidePadding = resources.getDimensionPixelSize(R.dimen.sidePadding)
         pokemonRV.addItemDecoration(PokemonItemDecoration(sidePadding))
 
+        //open favorites activity
+        favorites.setOnClickListener {
+            val intent = Intent(this@MainActivity, FavoritesActivity::class.java)
+            startActivity(intent)
+
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainPresenterImpl?.getPokemonDetailsFromDb()
     }
 
     override fun showPokemonRV() {
@@ -78,14 +85,28 @@ class MainActivity : AppCompatActivity(), MainContract.MainView {
 
     }
 
+    override fun resetPokemonList(pokeList: List<Pokemon>) {
+        pokemonAdapter?.updateData(pokeList)
+    }
+
     override fun showErrorToast() {
         Toast.makeText(this, "Error calling API", Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        pokemonAdapter?.setListenerToNull()
         mainPresenterImpl?.onDestroy()
     }
 
+    override fun cardOnClick(pokemon: Pokemon, position: Int) {
+        val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
+        intent.putExtra("Pokemon", Gson().toJson(pokemon))
+        startActivity(intent)
+    }
+
+    override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
+        mainPresenterImpl?.setFavorite(pokemon, buttonState)
+    }
 
 }

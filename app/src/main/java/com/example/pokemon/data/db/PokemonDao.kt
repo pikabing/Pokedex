@@ -17,6 +17,15 @@ interface PokemonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(pokemon: List<Pokemon>)
 
+    @Query("SELECT id from pokemon WHERE favorite = 1")
+    fun getFavoritePokemonsID(): List<Int>
+
     @Update
     fun update(pokemon: Pokemon)
+
+    @Query("UPDATE pokemon SET favorite= :value WHERE id = :pokemonId")
+    fun setFavorite(pokemonId: Int, value: Boolean)
+
+    @Query("SELECT * FROM pokemon WHERE favorite = 1")
+    fun fetchFavoriteList() : Single<List<Pokemon>>
 }

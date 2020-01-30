@@ -9,6 +9,7 @@ interface PokemonDetailContract {
         fun hideProgressBar()
         fun setPokemonDetails(pokemon: Pokemon)
         fun pokemonDetailsNotCached(name: String)
+        fun makePokemonFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun showErrorToast()
 
     }
@@ -16,6 +17,7 @@ interface PokemonDetailContract {
     interface PokemonDetailPresenter {
 
         fun getPokemonDetails(pokemon: Pokemon)
+        fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun onDestroy()
     }
 }

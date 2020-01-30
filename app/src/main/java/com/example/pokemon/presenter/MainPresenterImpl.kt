@@ -1,7 +1,6 @@
 package com.example.pokemon.presenter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.example.pokemon.MyApplication
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.data.db.AppDatabase
@@ -16,7 +15,8 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
-    private val appDatabase = AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
+    private val appDatabase =
+        AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
     private val pokemonRepository = PokemonRepository.getInstance(appDatabase)
     private val compositeDisposable = CompositeDisposable()
 
@@ -25,12 +25,27 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
         if (offset > 960)
             return
 
-        callPokemonApi(offset)
+        getPokemonsFromRepo(offset)
         offset += 8
 
     }
 
-    override fun getPokemon(id: Int) = pokeList[id]
+    override fun getPokemonDetailsFromDb(){
+        compositeDisposable.add(
+            pokemonRepository.getPokemonListFromDB().subscribeOn(Schedulers.io()).observeOn(
+                AndroidSchedulers.mainThread()
+            ).subscribe({
+                rePopulateList(it)
+            }, {
+                it.printStackTrace()
+            })
+        )
+    }
+
+    override fun getPokemon(pos: Int): Pokemon = pokeList[pos]
+
+    override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) =
+        pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
     override fun onDestroy() {
         mainView = null
@@ -38,7 +53,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
         AppDatabase.destroyDataBase()
     }
 
-    private fun callPokemonApi(offset: Int) {
+    private fun getPokemonsFromRepo(offset: Int) {
 
         compositeDisposable.add(pokemonRepository.getPokemonList(offset)
             .subscribeOn(Schedulers.io())
@@ -49,7 +64,6 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
                 }
             }, {
                 mainView?.showErrorToast()
-                Log.e("ERROR","" + it.message)
             }
             ))
 
@@ -59,15 +73,17 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
     @SuppressLint("DefaultLocale")
     private fun populateList(response: List<Pokemon>) {
         response.let {
-            response.map {
-                val tokens = it.url.split("/")
-                it.id = tokens[tokens.lastIndex - 1].toInt()
-                it.name = it.name.capitalize()
-            }
             pokeList.addAll(response)
             mainView?.setPokemonAdapter(response)
             mainView?.showPokemonRV()
         }
 
+    }
+
+    private fun rePopulateList(response: List<Pokemon>) {
+        response.let {
+            pokeList = ArrayList(it)
+            mainView?.resetPokemonList(it)
+        }
     }
 }

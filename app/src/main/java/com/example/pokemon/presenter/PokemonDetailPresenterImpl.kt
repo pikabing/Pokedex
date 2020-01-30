@@ -27,6 +27,8 @@ class PokemonDetailPresenterImpl(private var pokemonDetailView: PokemonDetailCon
         )
     }
 
+    override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) = pokemonRepository.setFavoritePokemon(pokemon, buttonState)
+
     private fun populateDetails(pokemon: Pokemon?) {
 
         pokemon?.let {

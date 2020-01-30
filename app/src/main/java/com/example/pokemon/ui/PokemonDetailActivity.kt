@@ -2,8 +2,8 @@ package com.example.pokemon.ui
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +14,8 @@ import com.example.pokemon.model.Pokemon
 import com.example.pokemon.presenter.PokemonDetailPresenterImpl
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.pokemon_detail.*
+import com.varunest.sparkbutton.SparkEventListener
+import kotlinx.android.synthetic.main.activity_pokemon_detail.*
 
 class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.PokemonDetailView {
 
@@ -22,7 +23,7 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.pokemon_detail)
+        setContentView(R.layout.activity_pokemon_detail)
 
         pokemonDetailPresenterImpl = PokemonDetailPresenterImpl(this)
 
@@ -42,9 +43,25 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
                 .load(this.resources.getString(R.string.pokemon_image_url) + it.id + ".png")
                 .placeholder(R.drawable.placeholder)
                 .into(pokemonDetailImage)
-
+            favoriteButtonInDetail.isChecked = it.favorite
             pokemonDetailPresenterImpl?.getPokemonDetails(it)
         }
+
+        favoriteButtonInDetail.setEventListener(object : SparkEventListener {
+            override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {
+
+            }
+
+            override fun onEvent(button: ImageView?, buttonState: Boolean) {
+                if (pokemon != null)
+                    pokemonDetailPresenterImpl?.setFavorite(pokemon, buttonState)
+                if(!buttonState) favoriteButtonInDetail.playAnimation()
+            }
+
+            override fun onEventAnimationStart(button: ImageView?, buttonState: Boolean) {
+            }
+
+        })
 
     }
 
@@ -108,9 +125,17 @@ class PokemonDetailActivity : AppCompatActivity(), PokemonDetailContract.Pokemon
     override fun pokemonDetailsNotCached(name: String) {
         detailCLayout.visibility = View.GONE
         pokemonDetailSpinner.visibility = View.GONE
-        val myToast = Toast.makeText(applicationContext,"${name.capitalize()}'s details couldn't be cached",Toast.LENGTH_SHORT)
-        myToast.setGravity(0,0,0)
+        val myToast = Toast.makeText(
+            applicationContext,
+            "${name.capitalize()}'s details couldn't be cached",
+            Toast.LENGTH_SHORT
+        )
+        myToast.setGravity(0, 0, 0)
         myToast.show()
+    }
+
+    override fun makePokemonFavorite(pokemon: Pokemon, buttonState: Boolean) {
+        pokemonDetailPresenterImpl?.setFavorite(pokemon, buttonState)
     }
 
     override fun showErrorToast() {

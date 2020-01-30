@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">Pokemon</string>
+    <string name="app_name">Pokemons</string>
     <string name="pokemon_image_url">https://pokeres.bastionbot.org/images/pokemon/</string>
+    <string name="fav">FAVORITES</string>
 </resources>
