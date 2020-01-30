@@ -15,12 +15,13 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_favorites.*
 import kotlinx.android.synthetic.main.activity_favorites.backButton
 
-class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, PokemonAdapter.PokemonAdapterListener {
+class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView,
+    PokemonAdapter.PokemonAdapterListener {
 
     private val pokeList: ArrayList<Pokemon> = arrayListOf()
     private val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     private var pokemonAdapter: PokemonAdapter? = null
-    private var favoritePresenterImpl : FavoritePresenterImpl? = null
+    private var favoritePresenterImpl: FavoritePresenterImpl? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +43,13 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, P
         super.onResume()
         favoritePresenterImpl?.getFavoriteList()
     }
+
     override fun setPokemonAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.updateData(pokeList)
     }
 
     override fun showErrorToast() {
-        Toast.makeText(this, "Error retrieving favorite Pokemon list",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Error retrieving favorite Pokemon list", Toast.LENGTH_SHORT).show()
     }
 
     override fun cardOnClick(pokemon: Pokemon, position: Int) {
@@ -58,6 +60,8 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, P
 
     override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
         favoritePresenterImpl?.setFavorite(pokemon, buttonState)
+        if (!buttonState) pokemonAdapter?.removePokemonFromFavorite(pokemon)
+
     }
 
 }
