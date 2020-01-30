@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.pokemon.R
 import com.example.pokemon.model.Pokemon
+import com.example.pokemon.utils.DiffUtilCallBack
 import com.varunest.sparkbutton.SparkEventListener
 import kotlinx.android.synthetic.main.pokemon_list.view.*
 
@@ -125,8 +127,13 @@ class PokemonAdapter(
     }
 
     fun updateData(pokeList: List<Pokemon>) {
-        this.pokeList = ArrayList(pokeList)
-        notifyDataSetChanged()
+        val diffUtilCallBack = DiffUtilCallBack(this.pokeList, pokeList)
+        val diffResult = DiffUtil.calculateDiff(diffUtilCallBack)
+
+        this.pokeList.clear()
+        this.pokeList.addAll(pokeList)
+        diffResult.dispatchUpdatesTo(this)
+
     }
 
     fun removePokemonFromFavorite(pokemon: Pokemon) {
