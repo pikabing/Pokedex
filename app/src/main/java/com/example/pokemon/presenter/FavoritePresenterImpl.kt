@@ -1,6 +1,5 @@
 package com.example.pokemon.presenter
 
-import android.util.Log
 import com.example.pokemon.MyApplication
 import com.example.pokemon.contract.FavoritesContract
 import com.example.pokemon.data.db.AppDatabase
