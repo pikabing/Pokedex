@@ -101,11 +101,7 @@ class PokemonAdapter(
                     }
 
                     override fun onEvent(button: ImageView?, buttonState: Boolean) {
-                        if (buttonState) {
-                            pokemonAdapterListener?.favoriteButtonOn(pokemon)
-                        } else {
-                            pokemonAdapterListener?.favoriteButtonOff(pokemon)
-                        }
+                        pokemonAdapterListener?.favoriteButton(pokemon, buttonState)
                         pokemon.favorite = buttonState
                         favoriteButtonInList.playAnimation()
                     }
@@ -145,8 +141,7 @@ class PokemonAdapter(
 
     interface PokemonAdapterListener {
         fun cardOnClick(pokemon: Pokemon, position: Int)
-        fun favoriteButtonOn(pokemon: Pokemon)
-        fun favoriteButtonOff(pokemon: Pokemon)
+        fun favoriteButton(pokemon: Pokemon, buttonState: Boolean)
     }
 
 }

@@ -107,13 +107,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
         }
     }
 
-    override fun favoriteButtonOn(pokemon: Pokemon) {
-        mainPresenterImpl?.setFavorite(pokemon, true)
+    override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
+        mainPresenterImpl?.setFavorite(pokemon, buttonState)
     }
-
-    override fun favoriteButtonOff(pokemon: Pokemon) {
-        mainPresenterImpl?.setFavorite(pokemon, false)
-    }
-
 
 }
