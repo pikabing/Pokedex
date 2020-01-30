@@ -34,7 +34,7 @@ class FavoritePresenterImpl(private var favoriteView: FavoritesContract.Favorite
 
     override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) = pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
-    override fun getPokemon(pos: Int) = pokeList[pos]
+    override fun getPokemon(id: Int) = pokeList[id]
 
     override fun onDestroy() {
         favoriteView = null
