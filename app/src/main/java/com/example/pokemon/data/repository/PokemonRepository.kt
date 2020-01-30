@@ -49,22 +49,14 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .subscribe({
-                if (buttonState)
-                    favoritePokemon(it)
-                else
-                    unFavoritePokemon(it)
+                favoritePokemon(it, buttonState)
             }, {
                 it.printStackTrace()
             })
     }
 
-    private fun favoritePokemon(pokemon: Pokemon) {
-        mAppDatabase.pokemonDao().setFavorite(pokemon.id, true)
-    }
-
-
-    private fun unFavoritePokemon(pokemon: Pokemon) {
-        mAppDatabase.pokemonDao().setFavorite(pokemon.id, false)
+    private fun favoritePokemon(pokemon: Pokemon, buttonState: Boolean) {
+        mAppDatabase.pokemonDao().setFavorite(pokemon.id, buttonState)
     }
 
 
