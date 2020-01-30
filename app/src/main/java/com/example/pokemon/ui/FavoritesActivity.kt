@@ -52,18 +52,12 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView, P
 
     override fun cardOnClick(pokemon: Pokemon, position: Int) {
         val intent = Intent(this, PokemonDetailActivity::class.java)
-        favoritePresenterImpl?.getPokemon(position)?.let {
-            intent.putExtra("Pokemon", Gson().toJson(it))
-            startActivity(intent)
-        }
+        intent.putExtra("Pokemon", Gson().toJson(pokemon))
+        startActivity(intent)
     }
 
-    override fun favoriteButtonOn(pokemon: Pokemon) {
-        favoritePresenterImpl?.setFavorite(pokemon, true)
+    override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
+        favoritePresenterImpl?.setFavorite(pokemon, buttonState)
     }
 
-    override fun favoriteButtonOff(pokemon: Pokemon) {
-        pokemonAdapter?.removePokemonFromFavorite(pokemon)
-        favoritePresenterImpl?.setFavorite(pokemon, false)
-    }
 }

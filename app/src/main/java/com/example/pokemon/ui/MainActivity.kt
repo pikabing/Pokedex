@@ -101,10 +101,8 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
 
     override fun cardOnClick(pokemon: Pokemon, position: Int) {
         val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
-        mainPresenterImpl?.getPokemon(position)?.let {
-            intent.putExtra("Pokemon", Gson().toJson(it))
-            startActivity(intent)
-        }
+        intent.putExtra("Pokemon", Gson().toJson(pokemon))
+        startActivity(intent)
     }
 
     override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
