@@ -40,7 +40,6 @@ class FavoritePresenterImpl(private var favoriteView: FavoritesContract.Favorite
     override fun onDestroy() {
         favoriteView = null
         compositeDisposable.dispose()
-        AppDatabase.destroyDataBase()
     }
 
 }
