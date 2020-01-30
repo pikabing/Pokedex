@@ -131,8 +131,10 @@ class PokemonAdapter(
 
     fun removePokemonFromFavorite(pokemon: Pokemon) {
         val index = pokeList.indexOf(pokemon)
-        pokeList.remove(pokemon)
-        notifyItemRemoved(index)
+        if(index != -1) {
+            pokeList.remove(pokemon)
+            notifyItemRemoved(index)
+        }
     }
 
     fun setListenerToNull() {
