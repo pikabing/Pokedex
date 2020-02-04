@@ -26,10 +26,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    kapt {
+        useBuildCache = true
+    }
 }
 
 dependencies {
     def retrofit2_version = "2.5.0"
+    def dagger2_version = "2.17"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -54,11 +58,11 @@ dependencies {
     kapt "androidx.room:room-compiler:2.2.3"
     //spark button
     implementation 'com.github.varunest:sparkbutton:1.0.6'
-    /* Dagger2 */
-    implementation 'com.google.dagger:dagger-android:2.17'
-    implementation 'com.google.dagger:dagger-android-support:2.17'
-    kapt 'com.google.dagger:dagger-android-processor:2.17'
-    /* Dagger2 - default dependency */
-    kapt 'com.google.dagger:dagger-compiler:2.17'
+    //dagger
+    implementation "com.google.dagger:dagger:$dagger2_version"
+    implementation "com.google.dagger:dagger-android:$dagger2_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger2_version"
 
 }

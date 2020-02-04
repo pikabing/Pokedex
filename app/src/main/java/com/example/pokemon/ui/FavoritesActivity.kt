@@ -8,26 +8,28 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.contract.FavoritesContract
+import com.example.pokemon.data.repository.PokemonRepository
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.presenter.FavoritePresenterImpl
+import com.example.pokemon.presenters.FavoritePresenter
 import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_favorites.*
 import kotlinx.android.synthetic.main.activity_favorites.backButton
 
-class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView,
+class FavoritesActivity : AppCompatActivity(), FavoritesContract.View,
     PokemonAdapter.PokemonAdapterListener {
 
     private val pokeList: ArrayList<Pokemon> = arrayListOf()
     private val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     private var pokemonAdapter: PokemonAdapter? = null
-    private var favoritePresenterImpl: FavoritePresenterImpl? = null
+    private var favoritePresenter: FavoritePresenter? = null
+    private lateinit var pokemonRepository: PokemonRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorites)
 
-        favoritePresenterImpl = FavoritePresenterImpl(this)
+        favoritePresenter = FavoritePresenter(pokemonRepository, this)
         pokemonAdapter = PokemonAdapter(pokeList, this)
 
         favorites_list.layoutManager = layoutManager
@@ -41,7 +43,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView,
 
     override fun onResume() {
         super.onResume()
-        favoritePresenterImpl?.getFavoriteList()
+        favoritePresenter?.getFavoriteList()
     }
 
     override fun setPokemonAdapter(pokeList: List<Pokemon>) {
@@ -53,13 +55,13 @@ class FavoritesActivity : AppCompatActivity(), FavoritesContract.FavoriteView,
     }
 
     override fun cardOnClick(pokemon: Pokemon, position: Int) {
-        val intent = Intent(this, PokemonDetailActivity::class.java)
+        val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra("Pokemon", Gson().toJson(pokemon))
         startActivity(intent)
     }
 
     override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
-        favoritePresenterImpl?.setFavorite(pokemon, buttonState)
+        favoritePresenter?.setFavorite(pokemon, buttonState)
         if (!buttonState) pokemonAdapter?.removePokemonFromFavorite(pokemon)
 
     }

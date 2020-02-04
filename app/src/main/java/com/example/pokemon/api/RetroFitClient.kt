@@ -9,7 +9,7 @@ object RetroFitClient {
 
     private const val URL = BuildConfig.BASE_URL
 
-    val INSTANCE: PokemonService by lazy {
+    val INSTANCE: PokemonApiService by lazy {
 
         val retrofit = Retrofit.Builder()
             .baseUrl(URL)
@@ -17,7 +17,7 @@ object RetroFitClient {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
-        retrofit.create(PokemonService::class.java)
+        retrofit.create(PokemonApiService::class.java)
 
     }
 }

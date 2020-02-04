@@ -1,20 +1,21 @@
-package com.example.pokemon.presenter
+package com.example.pokemon.presenters
 
-import com.example.pokemon.MyApplication
 import com.example.pokemon.contract.FavoritesContract
-import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.data.repository.PokemonRepository
 import com.example.pokemon.model.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class FavoritePresenterImpl(private var favoriteView: FavoritesContract.FavoriteView?) :
-    FavoritesContract.FavoritePresenter {
+class FavoritePresenter
+@Inject constructor(
+    private val pokemonRepository: PokemonRepository,
+    private var view: FavoritesContract.View?
+) :
+    FavoritesContract.Presenter {
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
-    private val appDatabase = AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
-    private val pokemonRepository = PokemonRepository.getInstance(appDatabase)
     private val compositeDisposable = CompositeDisposable()
 
     override fun getFavoriteList() {
@@ -24,20 +25,21 @@ class FavoritePresenterImpl(private var favoriteView: FavoritesContract.Favorite
             ).subscribe({
                 it?.let {
                     pokeList = ArrayList(it)
-                    favoriteView?.setPokemonAdapter(pokeList)
+                    view?.setPokemonAdapter(pokeList)
                 }
             }, {
-                favoriteView?.showErrorToast()
+                view?.showErrorToast()
             })
         )
     }
 
-    override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) = pokemonRepository.setFavoritePokemon(pokemon, buttonState)
+    override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) =
+        pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
     override fun getPokemon(id: Int) = pokeList[id]
 
     override fun onDestroy() {
-        favoriteView = null
+        view = null
         compositeDisposable.dispose()
     }
 

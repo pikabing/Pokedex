@@ -9,22 +9,19 @@ import com.example.pokemon.utils.Common
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PokemonRepository private constructor(private val mAppDatabase: AppDatabase) {
-
-    companion object {
-        private var instance: PokemonRepository? = null
-        fun getInstance(appDatabase: AppDatabase): PokemonRepository {
-            if (instance == null) {
-                instance = PokemonRepository(appDatabase)
-            }
-            return instance!!
-        }
-    }
+@Singleton
+class PokemonRepository
+@Inject
+constructor(
+    private val mAppDatabase: AppDatabase,
+    private val application: MyApplication) {
 
     fun getPokemonList(offset: Int): Single<List<Pokemon>> {
 
-        return if (Common.isConnectedToNetwork(MyApplication.application.applicationContext))
+        return if (Common.isConnectedToNetwork(application))
             makePokemonListApiCall(offset)
         else
             getPokemonListFromDB()
@@ -36,7 +33,7 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
 
     fun getPokemonDetails(pokemon: Pokemon): Single<Pokemon> {
 
-        return if (Common.isConnectedToNetwork(MyApplication.application.applicationContext))
+        return if (Common.isConnectedToNetwork(application))
             makePokemonDetailApiCall(pokemon)
         else
             getPokemonDetailFromDB(pokemon.id).switchIfEmpty(makePokemonDetailApiCall(pokemon))

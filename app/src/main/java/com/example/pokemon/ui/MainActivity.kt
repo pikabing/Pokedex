@@ -1,22 +1,24 @@
 package com.example.pokemon.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.pokemon.MyApplication
 import com.example.pokemon.utils.PagingListener
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.presenter.MainPresenterImpl
 import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.MainView,
+class MainActivity : DaggerAppCompatActivity() ,
+    MainContract.View,
     PokemonAdapter.PokemonAdapterListener {
 
     private val isLastPage: Boolean = false
@@ -24,22 +26,24 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
     private val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     private val pokeList: ArrayList<Pokemon> = arrayListOf()
     private var pokemonAdapter: PokemonAdapter? = null
-    private var mainPresenterImpl: MainPresenterImpl? = null
+
+    @Inject
+    lateinit var application: MyApplication
+    @Inject
+    lateinit var presenter:MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        mainPresenterImpl = MainPresenterImpl(this)
         pokemonAdapter = PokemonAdapter(pokeList, this)
         hidePokemonRV()
         pokemonRV.layoutManager = layoutManager
         pokemonRV.adapter = pokemonAdapter
 
         pokemonAdapter?.handleLoading(true)
-        mainPresenterImpl?.loadMorePokemons()
+        presenter.loadMorePokemons()
 
-        pokemonRV.addOnScrollListener(object : PagingListener(layoutManager) {
+        pokemonRV.addOnScrollListener(object : PagingListener(layoutManager, application) {
             override fun isLastPage(): Boolean = isLastPage
 
             override fun isLoading(): Boolean = isLoading
@@ -47,7 +51,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
             override fun loadMoreItems() {
                 isLoading = true
                 pokemonAdapter?.handleLoading(true)
-                mainPresenterImpl?.loadMorePokemons()
+                presenter?.loadMorePokemons()
             }
 
         })
@@ -66,7 +70,7 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
 
     override fun onResume() {
         super.onResume()
-        mainPresenterImpl?.getPokemonDetailsFromDb()
+        presenter?.getPokemonDetailsFromDb()
     }
 
     override fun showPokemonRV() {
@@ -96,17 +100,17 @@ class MainActivity : AppCompatActivity(), MainContract.MainView,
     override fun onDestroy() {
         super.onDestroy()
         pokemonAdapter?.setListenerToNull()
-        mainPresenterImpl?.onDestroy()
+        presenter?.onDestroy()
     }
 
     override fun cardOnClick(pokemon: Pokemon, position: Int) {
-        val intent = Intent(this@MainActivity, PokemonDetailActivity::class.java)
+        val intent = Intent(this@MainActivity, DetailActivity::class.java)
         intent.putExtra("Pokemon", Gson().toJson(pokemon))
         startActivity(intent)
     }
 
     override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
-        mainPresenterImpl?.setFavorite(pokemon, buttonState)
+        presenter?.setFavorite(pokemon, buttonState)
     }
 
 }
