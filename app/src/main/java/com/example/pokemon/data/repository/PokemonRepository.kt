@@ -17,10 +17,13 @@ class PokemonRepository
 @Inject
 constructor(
     private val mAppDatabase: AppDatabase,
-    private val appContext: Context) {
+    private val appContext: Context
+) {
 
     @Inject
     lateinit var pokemonApiService: PokemonApiService
+
+    private var dbCalledOnce: Boolean = false
 
     fun getPokemonList(offset: Int): Single<List<Pokemon>> {
 
@@ -91,8 +94,15 @@ constructor(
             pokemonResponse.results
         }
 
-    fun getPokemonListFromDB(): Single<List<Pokemon>> =
-        mAppDatabase.pokemonDao().fetchPokemonList()
+    fun getPokemonListFromDB(): Single<List<Pokemon>> {
+        return if (dbCalledOnce)
+            Single.just(ArrayList())
+        else {
+            dbCalledOnce = true
+            mAppDatabase.pokemonDao().fetchPokemonList()
+        }
+
+    }
 
 }
 
