@@ -1,8 +1,8 @@
 package com.example.pokemon.data.repository
 
 import android.annotation.SuppressLint
-import com.example.pokemon.MyApplication
-import com.example.pokemon.api.RetroFitClient
+import android.content.Context
+import com.example.pokemon.api.PokemonApiService
 import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.utils.Common
@@ -17,11 +17,14 @@ class PokemonRepository
 @Inject
 constructor(
     private val mAppDatabase: AppDatabase,
-    private val application: MyApplication) {
+    private val appContext: Context) {
+
+    @Inject
+    lateinit var pokemonApiService: PokemonApiService
 
     fun getPokemonList(offset: Int): Single<List<Pokemon>> {
 
-        return if (Common.isConnectedToNetwork(application))
+        return if (Common.isConnectedToNetwork(appContext))
             makePokemonListApiCall(offset)
         else
             getPokemonListFromDB()
@@ -33,7 +36,7 @@ constructor(
 
     fun getPokemonDetails(pokemon: Pokemon): Single<Pokemon> {
 
-        return if (Common.isConnectedToNetwork(application))
+        return if (Common.isConnectedToNetwork(appContext))
             makePokemonDetailApiCall(pokemon)
         else
             getPokemonDetailFromDB(pokemon.id).switchIfEmpty(makePokemonDetailApiCall(pokemon))
@@ -58,7 +61,7 @@ constructor(
 
 
     private fun makePokemonDetailApiCall(pokemon: Pokemon): Single<Pokemon> {
-        return RetroFitClient.INSTANCE.getPokemonDetails(pokemon.id)
+        return pokemonApiService.getPokemonDetails(pokemon.id)
             .map {
                 it.id = pokemon.id
                 it.name = pokemon.name
@@ -73,7 +76,7 @@ constructor(
         mAppDatabase.pokemonDao().fetchPokemonDetail(id)
 
 
-    private fun makePokemonListApiCall(offset: Int) = RetroFitClient.INSTANCE.getPokemons(offset, 8)
+    private fun makePokemonListApiCall(offset: Int) = pokemonApiService.getPokemons(offset, 8)
         .map { pokemonResponse ->
             val favoriteIds = mAppDatabase.pokemonDao().getFavoritePokemonsID()
             mAppDatabase.pokemonDao().insert(pokemonResponse.results.map {

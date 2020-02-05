@@ -1,5 +1,8 @@
 package com.example.pokemon.di.modules
 
+import com.example.pokemon.di.modules.activity.DetailModule
+import com.example.pokemon.di.modules.activity.FavoriteModule
+import com.example.pokemon.di.modules.activity.MainModule
 import com.example.pokemon.di.scope.ActivityScoped
 import com.example.pokemon.ui.DetailActivity
 import com.example.pokemon.ui.FavoritesActivity
@@ -11,19 +14,15 @@ import dagger.android.ContributesAndroidInjector
 abstract class ActivityBindingModule {
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = [ActivityModule::class])
-    internal abstract fun bindMainActivity(): MainActivity
-
-
-
-    @ActivityScoped
-    @ContributesAndroidInjector(modules = [ActivityModule::class])
+    @ContributesAndroidInjector(modules = [DetailModule::class])
     internal abstract fun bindDetailActivity(): DetailActivity
 
-
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = [MainModule::class])
+    internal abstract fun bindMainActivity(): MainActivity
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = [ActivityModule::class])
+    @ContributesAndroidInjector(modules = [FavoriteModule::class])
     internal abstract fun bindFavoriteActivity(): FavoritesActivity
 
 }

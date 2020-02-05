@@ -1,6 +1,7 @@
 package com.example.pokemon.presenters
 
 import com.example.pokemon.contract.FavoritesContract
+import com.example.pokemon.contract.MainContract
 import com.example.pokemon.data.repository.PokemonRepository
 import com.example.pokemon.model.Pokemon
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,13 +11,13 @@ import javax.inject.Inject
 
 class FavoritePresenter
 @Inject constructor(
-    private val pokemonRepository: PokemonRepository,
-    private var view: FavoritesContract.View?
-) :
+    private val pokemonRepository: PokemonRepository
+    ) :
     FavoritesContract.Presenter {
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private val compositeDisposable = CompositeDisposable()
+    private var view: FavoritesContract.View? = null
 
     override fun getFavoriteList() {
         compositeDisposable.add(
@@ -41,6 +42,10 @@ class FavoritePresenter
     override fun onDestroy() {
         view = null
         compositeDisposable.dispose()
+    }
+
+    override fun takeView(view: FavoritesContract.View) {
+        this.view = view
     }
 
 }

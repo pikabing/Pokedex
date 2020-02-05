@@ -10,9 +10,10 @@ import javax.inject.Inject
 
 class DetailPresenter
 @Inject constructor(
-    private val pokemonRepository: PokemonRepository,
-    private var view: DetailContract.View?
-) : DetailContract.Presenter {
+    private val pokemonRepository: PokemonRepository
+    ) : DetailContract.Presenter {
+
+    private var view: DetailContract.View? = null
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -45,6 +46,10 @@ class DetailPresenter
         }
         view?.hideProgressBar()
 
+    }
+
+    override fun takeView(view: DetailContract.View) {
+        this.view = view
     }
 
     override fun onDestroy() {

@@ -2,7 +2,6 @@ package com.example.pokemon.presenters
 
 import android.annotation.SuppressLint
 import com.example.pokemon.contract.MainContract
-import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.data.repository.PokemonRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,10 +16,6 @@ class MainPresenter
     MainContract.Presenter {
 
     private var view: MainContract.View? = null
-
-    override fun setView(view: MainContract.View) {
-        this.view = view
-    }
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
@@ -59,7 +54,6 @@ class MainPresenter
     override fun onDestroy() {
         view = null
         compositeDisposable.dispose()
-        AppDatabase.destroyDataBase()
     }
 
     private fun getPokemonsFromRepo(offset: Int) {
@@ -94,5 +88,9 @@ class MainPresenter
             pokeList = ArrayList(it)
             view?.resetPokemonList(it)
         }
+    }
+
+    override fun takeView(view: MainContract.View) {
+        this.view = view
     }
 }

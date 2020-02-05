@@ -1,6 +1,7 @@
 package com.example.pokemon.di.modules
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.data.db.PokemonDao
@@ -16,8 +17,8 @@ class DbModule {
 
     @Provides
     @Singleton
-    internal fun provideDatabase(application: Application): AppDatabase = Room.databaseBuilder(
-        application,
+    internal fun provideDatabase(appContext: Context): AppDatabase = Room.databaseBuilder(
+        appContext.applicationContext,
         AppDatabase::class.java,
         "myDB"
     ).build()

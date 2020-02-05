@@ -1,34 +1,34 @@
 package com.example.pokemon.ui
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.pokemon.R
 import com.example.pokemon.contract.DetailContract
-import com.example.pokemon.data.repository.PokemonRepository
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.presenters.DetailPresenter
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 import com.varunest.sparkbutton.SparkEventListener
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_pokemon_detail.*
+import javax.inject.Inject
 
-class DetailActivity : AppCompatActivity(),
+class DetailActivity : DaggerAppCompatActivity(),
     DetailContract.View {
 
-    private var pokemonDetailPresenter: DetailPresenter? = null
-    private lateinit var pokemonRepository: PokemonRepository
+    @Inject
+    lateinit var detailPresenter: DetailContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pokemon_detail)
 
-        pokemonDetailPresenter = DetailPresenter(pokemonRepository, this)
+        detailPresenter.takeView(this)
 
         backButton.setOnClickListener { finish() }
 
@@ -47,7 +47,7 @@ class DetailActivity : AppCompatActivity(),
                 .placeholder(R.drawable.placeholder)
                 .into(pokemonDetailImage)
             favoriteButtonInDetail.isChecked = it.favorite
-            pokemonDetailPresenter?.getPokemonDetails(it)
+            detailPresenter.getPokemonDetails(it)
         }
 
         favoriteButtonInDetail.setEventListener(object : SparkEventListener {
@@ -57,7 +57,7 @@ class DetailActivity : AppCompatActivity(),
 
             override fun onEvent(button: ImageView?, buttonState: Boolean) {
                 if (pokemon != null)
-                    pokemonDetailPresenter?.setFavorite(pokemon, buttonState)
+                    detailPresenter.setFavorite(pokemon, buttonState)
                 if(!buttonState) favoriteButtonInDetail.playAnimation()
             }
 
@@ -74,6 +74,7 @@ class DetailActivity : AppCompatActivity(),
         pokemonDetailSpinner.visibility = View.GONE
     }
 
+    @SuppressLint("SetTextI18n")
     override fun setPokemonDetails(pokemon: Pokemon) {
 
         heightOfPokemon.text = "Height: ${pokemon.height}m"
@@ -125,6 +126,7 @@ class DetailActivity : AppCompatActivity(),
 
     }
 
+    @SuppressLint("DefaultLocale")
     override fun pokemonDetailsNotCached(name: String) {
         detailCLayout.visibility = View.GONE
         pokemonDetailSpinner.visibility = View.GONE
@@ -138,7 +140,7 @@ class DetailActivity : AppCompatActivity(),
     }
 
     override fun makePokemonFavorite(pokemon: Pokemon, buttonState: Boolean) {
-        pokemonDetailPresenter?.setFavorite(pokemon, buttonState)
+        detailPresenter.setFavorite(pokemon, buttonState)
     }
 
     override fun showErrorToast() {
@@ -152,7 +154,7 @@ class DetailActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-        pokemonDetailPresenter?.onDestroy()
+        detailPresenter.onDestroy()
     }
 
 }

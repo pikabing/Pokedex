@@ -19,5 +19,6 @@ interface DetailContract {
         fun getPokemonDetails(pokemon: Pokemon)
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun onDestroy()
+        fun takeView(view: View)
     }
 }
