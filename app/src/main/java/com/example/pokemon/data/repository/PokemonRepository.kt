@@ -23,8 +23,6 @@ constructor(
     @Inject
     lateinit var pokemonApiService: PokemonApiService
 
-    private var dbCalledOnce: Boolean = false
-
     fun getPokemonList(offset: Int): Single<List<Pokemon>> {
 
         return if (Common.isConnectedToNetwork(appContext))
@@ -94,15 +92,8 @@ constructor(
             pokemonResponse.results
         }
 
-    fun getPokemonListFromDB(): Single<List<Pokemon>> {
-        return if (dbCalledOnce)
-            Single.just(ArrayList())
-        else {
-            dbCalledOnce = true
-            mAppDatabase.pokemonDao().fetchPokemonList()
-        }
+    fun getPokemonListFromDB(): Single<List<Pokemon>> = mAppDatabase.pokemonDao().fetchPokemonList()
 
-    }
 
 }
 

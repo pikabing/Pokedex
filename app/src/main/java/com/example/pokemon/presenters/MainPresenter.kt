@@ -85,8 +85,10 @@ class MainPresenter
 
     private fun rePopulateList(response: List<Pokemon>) {
         response.let {
-            pokeList = ArrayList(it)
-            view?.resetPokemonList(it)
+            if (it.isNotEmpty()) {
+                pokeList = ArrayList(it)
+                view?.resetPokemonList(it)
+            }
         }
     }
 

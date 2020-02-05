@@ -9,6 +9,7 @@ abstract class PagingListener constructor(
 
     abstract fun isLastPage(): Boolean
     abstract fun isLoading(): Boolean
+    abstract fun isConnected() : Boolean
     abstract fun loadMoreItems()
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -17,7 +18,7 @@ abstract class PagingListener constructor(
         val totalItems = layoutManager.itemCount
         val firstItemPosition = layoutManager.findFirstVisibleItemPositions(null)[0]
 
-        if (!isLoading() and !isLastPage()) {
+        if (!isLoading() and !isLastPage() and isConnected()) {
             if (visibleItems + firstItemPosition >= totalItems && firstItemPosition >= 0) {
                 loadMoreItems()
             }

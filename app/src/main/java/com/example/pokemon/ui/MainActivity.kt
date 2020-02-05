@@ -10,6 +10,7 @@ import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
+import com.example.pokemon.utils.Common
 import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
 import dagger.android.support.DaggerAppCompatActivity
@@ -26,6 +27,7 @@ class MainActivity : DaggerAppCompatActivity(),
     private val pokeList: ArrayList<Pokemon> = arrayListOf()
 
     private var pokemonAdapter: PokemonAdapter? = null
+    private var firstTimeOpened: Boolean = false
 
     @Inject
     lateinit var presenter: MainContract.Presenter
@@ -50,6 +52,8 @@ class MainActivity : DaggerAppCompatActivity(),
 
             override fun isLoading(): Boolean = isLoading
 
+            override fun isConnected(): Boolean = isConnectedToNetwork()
+
             override fun loadMoreItems() {
                 isLoading = true
                 pokemonAdapter?.handleLoading(true)
@@ -70,9 +74,15 @@ class MainActivity : DaggerAppCompatActivity(),
 
     }
 
+    fun isConnectedToNetwork() = Common.isConnectedToNetwork(applicationContext)
+
     override fun onResume() {
         super.onResume()
-        presenter.getPokemonDetailsFromDb()
+
+        if(!isConnectedToNetwork() || firstTimeOpened)
+            presenter.getPokemonDetailsFromDb()
+
+        firstTimeOpened = true
     }
 
     override fun showPokemonRV() {
@@ -101,6 +111,7 @@ class MainActivity : DaggerAppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
+        firstTimeOpened = false
         pokemonAdapter?.setListenerToNull()
         presenter.onDestroy()
     }
