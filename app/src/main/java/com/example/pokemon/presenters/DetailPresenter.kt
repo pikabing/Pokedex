@@ -11,7 +11,7 @@ import javax.inject.Inject
 class DetailPresenter
 @Inject constructor(
     private val pokemonRepository: PokemonRepository
-    ) : DetailContract.Presenter {
+) : DetailContract.Presenter {
 
     private var view: DetailContract.View? = null
 
@@ -36,13 +36,10 @@ class DetailPresenter
     private fun populateDetails(pokemon: Pokemon?) {
 
         pokemon?.let {
-            if (it.height == null) {
+            if (it.height == null)
                 view?.pokemonDetailsNotCached(it.name)
-            } else {
+            else
                 view?.setPokemonDetails(it)
-                view?.hideProgressBar()
-            }
-
         }
         view?.hideProgressBar()
 

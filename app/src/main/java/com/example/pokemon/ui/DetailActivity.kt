@@ -23,6 +23,7 @@ class DetailActivity : DaggerAppCompatActivity(),
 
     @Inject
     lateinit var detailPresenter: DetailContract.Presenter
+    private var pokemon: Pokemon? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,6 @@ class DetailActivity : DaggerAppCompatActivity(),
         backButton.setOnClickListener { finish() }
 
         val pokemonString = intent.extras?.getString("Pokemon")
-        var pokemon: Pokemon? = null
 
         if (pokemonString != null) {
             pokemon = Gson().fromJson(pokemonString, Pokemon::class.java)
@@ -56,8 +56,13 @@ class DetailActivity : DaggerAppCompatActivity(),
             }
 
             override fun onEvent(button: ImageView?, buttonState: Boolean) {
-                if (pokemon != null)
-                    detailPresenter.setFavorite(pokemon, buttonState)
+                if (pokemon?.height != null)
+                    detailPresenter.setFavorite(pokemon!!, buttonState)
+                else {
+                    favoriteButtonInDetail.isChecked = false
+                    favoriteButtonInDetail.playAnimation()
+                    Toast.makeText(applicationContext, "Please let ${pokemon?.name}'s details load...", Toast.LENGTH_SHORT).show()
+                }
                 if(!buttonState) favoriteButtonInDetail.playAnimation()
             }
 
@@ -76,6 +81,8 @@ class DetailActivity : DaggerAppCompatActivity(),
 
     @SuppressLint("SetTextI18n")
     override fun setPokemonDetails(pokemon: Pokemon) {
+
+        this.pokemon = pokemon
 
         heightOfPokemon.text = "Height: ${pokemon.height}m"
 
