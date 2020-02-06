@@ -5,7 +5,7 @@ import android.content.Context
 import com.example.pokemon.api.PokemonApiService
 import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.utils.Common
+import com.example.pokemon.utils.common.NetworkCheck
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +23,7 @@ constructor(
 
     fun getPokemonList(offset: Int): Single<List<Pokemon>> {
 
-        return if (Common.isConnectedToNetwork(appContext))
+        return if (NetworkCheck.isConnectedToNetwork(appContext))
             makePokemonListApiCall(offset)
         else
             getPokemonListFromDB()
@@ -35,7 +35,7 @@ constructor(
 
     fun getPokemonDetails(pokemon: Pokemon): Single<Pokemon> {
 
-        return if (Common.isConnectedToNetwork(appContext))
+        return if (NetworkCheck.isConnectedToNetwork(appContext))
             makePokemonDetailApiCall(pokemon)
         else
             getPokemonDetailFromDB(pokemon.id).switchIfEmpty(makePokemonDetailApiCall(pokemon))

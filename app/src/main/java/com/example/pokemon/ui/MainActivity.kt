@@ -10,7 +10,7 @@ import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.utils.Common
+import com.example.pokemon.utils.common.NetworkCheck
 import com.example.pokemon.utils.PokemonItemDecoration
 import com.google.gson.Gson
 import dagger.android.support.DaggerAppCompatActivity
@@ -74,7 +74,7 @@ class MainActivity : DaggerAppCompatActivity(),
 
     }
 
-    private fun isConnectedToNetwork() = Common.isConnectedToNetwork(applicationContext)
+    private fun isConnectedToNetwork() = NetworkCheck.isConnectedToNetwork(applicationContext)
 
     override fun onResume() {
         super.onResume()
