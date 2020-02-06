@@ -17,6 +17,6 @@ interface MainContract {
         fun loadMorePokemons()
         fun getPokemon(id: Int): Pokemon
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
-        fun getPokemonDetailsFromDb()
+        fun getPokemonListFromDb()
     }
 }

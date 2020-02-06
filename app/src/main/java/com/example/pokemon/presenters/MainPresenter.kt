@@ -29,9 +29,10 @@ class MainPresenter
 
     }
 
-    override fun getPokemonDetailsFromDb() {
+    override fun getPokemonListFromDb() {
         mCompositeDisposable.add(
-            pokemonRepository.getPokemonListFromDB().subscribeOn(Schedulers.io()).observeOn(
+            pokemonRepository.getPokemonListFromDB().subscribeOn(Schedulers.io())
+                .observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
                 rePopulateList(it)
@@ -49,6 +50,7 @@ class MainPresenter
     private fun getPokemonsFromRepo(offset: Int) {
 
         mCompositeDisposable.add(pokemonRepository.getPokemonList(offset)
+            .retry(5)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

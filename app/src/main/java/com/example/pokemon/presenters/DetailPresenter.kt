@@ -16,6 +16,7 @@ class DetailPresenter
     override fun getPokemonDetails(pokemon: Pokemon) {
         mCompositeDisposable.add(
             pokemonRepository.getPokemonDetails(pokemon)
+                .retry(5)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
