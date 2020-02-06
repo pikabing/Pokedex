@@ -5,17 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.pokemon.utils.PagingListener
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.utils.common.NetworkCheck
+import com.example.pokemon.utils.PagingListener
 import com.example.pokemon.utils.PokemonItemDecoration
+import com.example.pokemon.utils.common.NetworkCheck
 import com.google.gson.Gson
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+
 
 class MainActivity : DaggerAppCompatActivity(),
     MainContract.View,
@@ -76,6 +77,11 @@ class MainActivity : DaggerAppCompatActivity(),
 
         }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshPokemonList()
+        }
+
+        swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimaryDark))
     }
 
     private fun isConnectedToNetwork() = NetworkCheck.isConnectedToNetwork(applicationContext)
@@ -119,6 +125,14 @@ class MainActivity : DaggerAppCompatActivity(),
 
     override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
         presenter.setFavorite(pokemon, buttonState)
+    }
+
+    override fun refreshPokemonList() {
+        presenter.reloadPokemonList()
+    }
+
+    override fun setRefreshFalse() {
+        swipeRefreshLayout.isRefreshing = false
     }
 
 }
