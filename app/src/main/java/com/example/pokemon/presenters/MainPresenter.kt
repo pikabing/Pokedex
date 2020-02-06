@@ -1,23 +1,27 @@
-package com.example.pokemon.presenter
+package com.example.pokemon.presenters
 
 import android.annotation.SuppressLint
-import com.example.pokemon.MyApplication
 import com.example.pokemon.contract.MainContract
-import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.data.repository.PokemonRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 
-class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainContract.MainPresenter {
+class MainPresenter
+@Inject constructor
+    (private val pokemonRepository: PokemonRepository) :
+    MainContract.Presenter {
+
+    private var view: MainContract.View? = null
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
     private var offset: Int = 0
-    private val appDatabase =
-        AppDatabase.getAppDataBase(MyApplication.application.applicationContext)
-    private val pokemonRepository = PokemonRepository.getInstance(appDatabase)
+
+    // Can this composite disposable be removed using dagger?
+
     private val compositeDisposable = CompositeDisposable()
 
     override fun loadMorePokemons() {
@@ -30,7 +34,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
 
     }
 
-    override fun getPokemonDetailsFromDb(){
+    override fun getPokemonDetailsFromDb() {
         compositeDisposable.add(
             pokemonRepository.getPokemonListFromDB().subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()
@@ -42,15 +46,14 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
         )
     }
 
-    override fun getPokemon(pos: Int): Pokemon = pokeList[pos]
+    override fun getPokemon(id: Int): Pokemon = pokeList[id]
 
     override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) =
         pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
     override fun onDestroy() {
-        mainView = null
+        view = null
         compositeDisposable.dispose()
-        AppDatabase.destroyDataBase()
     }
 
     private fun getPokemonsFromRepo(offset: Int) {
@@ -63,7 +66,7 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
                     populateList(it)
                 }
             }, {
-                mainView?.showErrorToast()
+                view?.showErrorToast()
             }
             ))
 
@@ -74,16 +77,22 @@ class MainPresenterImpl(private var mainView: MainContract.MainView?) : MainCont
     private fun populateList(response: List<Pokemon>) {
         response.let {
             pokeList.addAll(response)
-            mainView?.setPokemonAdapter(response)
-            mainView?.showPokemonRV()
+            view?.setPokemonAdapter(response)
+            view?.showPokemonRV()
         }
 
     }
 
     private fun rePopulateList(response: List<Pokemon>) {
         response.let {
-            pokeList = ArrayList(it)
-            mainView?.resetPokemonList(it)
+            if (it.isNotEmpty()) {
+                pokeList = ArrayList(it)
+                view?.resetPokemonList(it)
+            }
         }
+    }
+
+    override fun takeView(view: MainContract.View?) {
+        this.view = view
     }
 }

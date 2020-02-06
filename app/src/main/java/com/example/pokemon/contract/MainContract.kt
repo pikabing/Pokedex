@@ -4,7 +4,7 @@ import com.example.pokemon.model.Pokemon
 
 interface MainContract {
 
-    interface MainView {
+    interface View {
         fun showPokemonRV()
         fun hidePokemonRV()
         fun setPokemonAdapter(pokeList: List<Pokemon>)
@@ -12,11 +12,12 @@ interface MainContract {
         fun showErrorToast()
     }
 
-    interface MainPresenter {
+    interface Presenter {
         fun loadMorePokemons()
         fun getPokemon(id: Int): Pokemon
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun getPokemonDetailsFromDb()
         fun onDestroy()
+        fun takeView(view: View?)
     }
 }

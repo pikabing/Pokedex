@@ -1,18 +1,17 @@
 package com.example.pokemon
 
-import android.app.Application
-import com.example.pokemon.data.db.AppDatabase
+import com.example.pokemon.di.components.AppComponent
+import com.example.pokemon.di.components.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 
-class MyApplication : Application() {
+class MyApplication : DaggerApplication(){
 
-    companion object {
-        lateinit var application: Application
-    }
+    lateinit var appComponent: AppComponent
 
-    override fun onCreate() {
-        super.onCreate()
-        application = this
-        AppDatabase.getAppDataBase(this)
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        appComponent = DaggerAppComponent.builder().application(this).build()
+        return appComponent
     }
 
 }

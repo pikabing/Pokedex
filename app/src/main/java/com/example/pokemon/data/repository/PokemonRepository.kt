@@ -1,30 +1,29 @@
 package com.example.pokemon.data.repository
 
 import android.annotation.SuppressLint
-import com.example.pokemon.MyApplication
-import com.example.pokemon.api.RetroFitClient
+import android.content.Context
+import com.example.pokemon.api.PokemonApiService
 import com.example.pokemon.data.db.AppDatabase
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.utils.Common
+import com.example.pokemon.utils.common.NetworkCheck
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PokemonRepository private constructor(private val mAppDatabase: AppDatabase) {
-
-    companion object {
-        private var instance: PokemonRepository? = null
-        fun getInstance(appDatabase: AppDatabase): PokemonRepository {
-            if (instance == null) {
-                instance = PokemonRepository(appDatabase)
-            }
-            return instance!!
-        }
-    }
+@Singleton
+class PokemonRepository
+@Inject
+constructor(
+    private val mAppDatabase: AppDatabase,
+    private val appContext: Context,
+    private val pokemonApiService: PokemonApiService
+) {
 
     fun getPokemonList(offset: Int): Single<List<Pokemon>> {
 
-        return if (Common.isConnectedToNetwork(MyApplication.application.applicationContext))
+        return if (NetworkCheck.isConnectedToNetwork(appContext))
             makePokemonListApiCall(offset)
         else
             getPokemonListFromDB()
@@ -36,7 +35,7 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
 
     fun getPokemonDetails(pokemon: Pokemon): Single<Pokemon> {
 
-        return if (Common.isConnectedToNetwork(MyApplication.application.applicationContext))
+        return if (NetworkCheck.isConnectedToNetwork(appContext))
             makePokemonDetailApiCall(pokemon)
         else
             getPokemonDetailFromDB(pokemon.id).switchIfEmpty(makePokemonDetailApiCall(pokemon))
@@ -61,7 +60,7 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
 
 
     private fun makePokemonDetailApiCall(pokemon: Pokemon): Single<Pokemon> {
-        return RetroFitClient.INSTANCE.getPokemonDetails(pokemon.id)
+        return pokemonApiService.getPokemonDetails(pokemon.id)
             .map {
                 it.id = pokemon.id
                 it.name = pokemon.name
@@ -76,7 +75,7 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
         mAppDatabase.pokemonDao().fetchPokemonDetail(id)
 
 
-    private fun makePokemonListApiCall(offset: Int) = RetroFitClient.INSTANCE.getPokemons(offset, 8)
+    private fun makePokemonListApiCall(offset: Int) = pokemonApiService.getPokemons(offset, 8)
         .map { pokemonResponse ->
             val favoriteIds = mAppDatabase.pokemonDao().getFavoritePokemonsID()
             mAppDatabase.pokemonDao().insert(pokemonResponse.results.map {
@@ -91,8 +90,8 @@ class PokemonRepository private constructor(private val mAppDatabase: AppDatabas
             pokemonResponse.results
         }
 
-    fun getPokemonListFromDB(): Single<List<Pokemon>> =
-        mAppDatabase.pokemonDao().fetchPokemonList()
+    fun getPokemonListFromDB(): Single<List<Pokemon>> = mAppDatabase.pokemonDao().fetchPokemonList()
+
 
 }
 

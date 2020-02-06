@@ -2,12 +2,14 @@ package com.example.pokemon.utils
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.pokemon.MyApplication
 
-abstract class PagingListener(var layoutManager: StaggeredGridLayoutManager) : RecyclerView.OnScrollListener() {
+abstract class PagingListener constructor(
+    var layoutManager: StaggeredGridLayoutManager
+) : RecyclerView.OnScrollListener() {
 
     abstract fun isLastPage(): Boolean
     abstract fun isLoading(): Boolean
+    abstract fun isConnected() : Boolean
     abstract fun loadMoreItems()
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -16,7 +18,7 @@ abstract class PagingListener(var layoutManager: StaggeredGridLayoutManager) : R
         val totalItems = layoutManager.itemCount
         val firstItemPosition = layoutManager.findFirstVisibleItemPositions(null)[0]
 
-        if(!isLoading() and !isLastPage() and Common.isConnectedToNetwork(MyApplication.application.applicationContext)) {
+        if (!isLoading() and !isLastPage() and isConnected()) {
             if (visibleItems + firstItemPosition >= totalItems && firstItemPosition >= 0) {
                 loadMoreItems()
             }

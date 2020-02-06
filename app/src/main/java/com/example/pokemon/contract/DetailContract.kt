@@ -2,9 +2,9 @@ package com.example.pokemon.contract
 
 import com.example.pokemon.model.Pokemon
 
-interface PokemonDetailContract {
+interface DetailContract {
 
-    interface PokemonDetailView {
+    interface View {
 
         fun hideProgressBar()
         fun setPokemonDetails(pokemon: Pokemon)
@@ -14,10 +14,11 @@ interface PokemonDetailContract {
 
     }
 
-    interface PokemonDetailPresenter {
+    interface Presenter {
 
         fun getPokemonDetails(pokemon: Pokemon)
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun onDestroy()
+        fun takeView(view: View?)
     }
 }

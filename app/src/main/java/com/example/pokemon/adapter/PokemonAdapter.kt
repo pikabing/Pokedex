@@ -98,7 +98,7 @@ class PokemonAdapter(
                     pokemonAdapterListener?.cardOnClick(pokemon, adapterPosition)
                 }
                 itemView.favoriteButtonInList.isChecked = pokemon.favorite
-                itemView.favoriteButtonInList.setEventListener(object : SparkEventListener{
+                itemView.favoriteButtonInList.setEventListener(object : SparkEventListener {
                     override fun onEventAnimationEnd(button: ImageView?, buttonState: Boolean) {
                     }
 
@@ -138,7 +138,7 @@ class PokemonAdapter(
 
     fun removePokemonFromFavorite(pokemon: Pokemon) {
         val index = pokeList.indexOf(pokemon)
-        if(index != -1) {
+        if (index != -1) {
             pokeList.remove(pokemon)
             notifyItemRemoved(index)
         }

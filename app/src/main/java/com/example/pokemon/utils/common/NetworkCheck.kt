@@ -1,10 +1,10 @@
-package com.example.pokemon.utils
+package com.example.pokemon.utils.common
 
 import android.content.Context
 import android.net.ConnectivityManager
 
 
-object Common {
+object NetworkCheck {
 
     fun isConnectedToNetwork(context: Context?): Boolean {
         if (context == null)
