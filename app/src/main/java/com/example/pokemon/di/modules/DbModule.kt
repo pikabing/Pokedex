@@ -1,11 +1,8 @@
 package com.example.pokemon.di.modules
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.example.pokemon.data.db.AppDatabase
-import com.example.pokemon.data.db.PokemonDao
-import com.example.pokemon.data.repository.PokemonRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -22,11 +19,5 @@ class DbModule {
         AppDatabase::class.java,
         "myDB"
     ).build()
-
-    @Provides
-    @Singleton
-    internal fun providePokemonDao(appDatabase: AppDatabase): PokemonDao = appDatabase.pokemonDao()
-
-
 
 }
