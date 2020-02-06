@@ -4,25 +4,20 @@ import android.annotation.SuppressLint
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.data.repository.PokemonRepository
+import com.example.pokemon.utils.common.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
 class MainPresenter
 @Inject constructor
-    (private val pokemonRepository: PokemonRepository) :
+    (private val pokemonRepository: PokemonRepository) : BasePresenter<MainContract.View>(),
     MainContract.Presenter {
 
-    private var view: MainContract.View? = null
-
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
+
     private var offset: Int = 0
-
-    // Can this composite disposable be removed using dagger?
-
-    private val compositeDisposable = CompositeDisposable()
 
     override fun loadMorePokemons() {
 
@@ -34,9 +29,10 @@ class MainPresenter
 
     }
 
-    override fun getPokemonDetailsFromDb() {
-        compositeDisposable.add(
-            pokemonRepository.getPokemonListFromDB().subscribeOn(Schedulers.io()).observeOn(
+    override fun getPokemonListFromDb() {
+        mCompositeDisposable.add(
+            pokemonRepository.getPokemonListFromDB().subscribeOn(Schedulers.io())
+                .observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
                 rePopulateList(it)
@@ -51,14 +47,10 @@ class MainPresenter
     override fun setFavorite(pokemon: Pokemon, buttonState: Boolean) =
         pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
-    override fun onDestroy() {
-        view = null
-        compositeDisposable.dispose()
-    }
-
     private fun getPokemonsFromRepo(offset: Int) {
 
-        compositeDisposable.add(pokemonRepository.getPokemonList(offset)
+        mCompositeDisposable.add(pokemonRepository.getPokemonList(offset)
+            .retry(5)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -66,7 +58,7 @@ class MainPresenter
                     populateList(it)
                 }
             }, {
-                view?.showErrorToast()
+                mView?.showErrorToast("Error calling API")
             }
             ))
 
@@ -77,8 +69,8 @@ class MainPresenter
     private fun populateList(response: List<Pokemon>) {
         response.let {
             pokeList.addAll(response)
-            view?.setPokemonAdapter(response)
-            view?.showPokemonRV()
+            mView?.setPokemonAdapter(response)
+            mView?.showPokemonRV()
         }
 
     }
@@ -87,12 +79,8 @@ class MainPresenter
         response.let {
             if (it.isNotEmpty()) {
                 pokeList = ArrayList(it)
-                view?.resetPokemonList(it)
+                mView?.resetPokemonList(it)
             }
         }
-    }
-
-    override fun takeView(view: MainContract.View?) {
-        this.view = view
     }
 }

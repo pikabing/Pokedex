@@ -3,29 +3,27 @@ package com.example.pokemon.presenters
 import com.example.pokemon.contract.DetailContract
 import com.example.pokemon.data.repository.PokemonRepository
 import com.example.pokemon.model.Pokemon
+import com.example.pokemon.utils.common.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class DetailPresenter
 @Inject constructor(
     private val pokemonRepository: PokemonRepository
-) : DetailContract.Presenter {
-
-    private var view: DetailContract.View? = null
-
-    private val compositeDisposable = CompositeDisposable()
+) : BasePresenter<DetailContract.View>() , DetailContract.Presenter {
 
     override fun getPokemonDetails(pokemon: Pokemon) {
-        compositeDisposable.add(
+        mCompositeDisposable.add(
             pokemonRepository.getPokemonDetails(pokemon)
+                .retry(5)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     populateDetails(it)
                 }, {
-                    view?.showErrorToast()
+                    mView?.showErrorToast("Failed to get details")
+                    mView?.hideProgressBar()
                 })
         )
     }
@@ -37,21 +35,12 @@ class DetailPresenter
 
         pokemon?.let {
             if (it.height == null)
-                view?.pokemonDetailsNotCached(it.name)
+                mView?.pokemonDetailsNotCached(it.name)
             else
-                view?.setPokemonDetails(it)
+                mView?.setPokemonDetails(it)
         }
-        view?.hideProgressBar()
+        mView?.hideProgressBar()
 
-    }
-
-    override fun takeView(view: DetailContract.View?) {
-        this.view = view
-    }
-
-    override fun onDestroy() {
-        view = null
-        compositeDisposable.dispose()
     }
 
 }

@@ -1,8 +1,8 @@
 package com.example.pokemon.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
@@ -20,11 +20,15 @@ class FavoritesActivity : DaggerAppCompatActivity(),
     PokemonAdapter.PokemonAdapterListener {
 
     private val pokeList: ArrayList<Pokemon> = arrayListOf()
+
     private val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+
     private var pokemonAdapter: PokemonAdapter? = null
 
     @Inject
     lateinit var favoritePresenter: FavoritesContract.Presenter
+
+    override val viewContext: Context? = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +55,6 @@ class FavoritesActivity : DaggerAppCompatActivity(),
 
     override fun setPokemonAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.updateData(pokeList)
-    }
-
-    override fun showErrorToast() {
-        Toast.makeText(this, "Error retrieving favorite Pokemon list", Toast.LENGTH_SHORT).show()
     }
 
     override fun cardOnClick(pokemon: Pokemon, position: Int) {

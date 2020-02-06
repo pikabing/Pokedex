@@ -1,6 +1,7 @@
 package com.example.pokemon.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
@@ -23,7 +24,10 @@ class DetailActivity : DaggerAppCompatActivity(),
 
     @Inject
     lateinit var detailPresenter: DetailContract.Presenter
+
     private var pokemon: Pokemon? = null
+
+    override val viewContext: Context? = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,18 +154,9 @@ class DetailActivity : DaggerAppCompatActivity(),
         detailPresenter.setFavorite(pokemon, buttonState)
     }
 
-    override fun showErrorToast() {
-        Toast.makeText(
-            this@DetailActivity,
-            "Failed to get details",
-            Toast.LENGTH_LONG
-        ).show()
-        hideProgressBar()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        detailPresenter.onDestroy()
+        detailPresenter.dropView()
     }
 
 }

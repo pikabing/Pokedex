@@ -1,9 +1,9 @@
 package com.example.pokemon.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pokemon.utils.PagingListener
 import com.example.pokemon.R
@@ -22,15 +22,21 @@ class MainActivity : DaggerAppCompatActivity(),
     PokemonAdapter.PokemonAdapterListener {
 
     private val isLastPage: Boolean = false
+
     private var isLoading: Boolean = false
+
     private val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+
     private val pokeList: ArrayList<Pokemon> = arrayListOf()
 
     private var pokemonAdapter: PokemonAdapter? = null
+
     private var firstTimeOpened: Boolean = false
 
     @Inject
     lateinit var presenter: MainContract.Presenter
+
+    override val viewContext: Context? = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,15 +111,11 @@ class MainActivity : DaggerAppCompatActivity(),
         pokemonAdapter?.updateData(pokeList)
     }
 
-    override fun showErrorToast() {
-        Toast.makeText(this, "Error calling API", Toast.LENGTH_LONG).show()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         firstTimeOpened = false
         pokemonAdapter?.setListenerToNull()
-        presenter.onDestroy()
+        presenter.dropView()
     }
 
     override fun cardOnClick(pokemon: Pokemon, position: Int) {

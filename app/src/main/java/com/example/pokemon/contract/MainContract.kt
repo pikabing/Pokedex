@@ -1,23 +1,22 @@
 package com.example.pokemon.contract
 
 import com.example.pokemon.model.Pokemon
+import com.example.pokemon.utils.common.MvpPresenter
+import com.example.pokemon.utils.common.MvpView
 
 interface MainContract {
 
-    interface View {
+    interface View: MvpView{
         fun showPokemonRV()
         fun hidePokemonRV()
         fun setPokemonAdapter(pokeList: List<Pokemon>)
         fun resetPokemonList(pokeList: List<Pokemon>)
-        fun showErrorToast()
     }
 
-    interface Presenter {
+    interface Presenter: MvpPresenter<View> {
         fun loadMorePokemons()
         fun getPokemon(id: Int): Pokemon
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
-        fun getPokemonDetailsFromDb()
-        fun onDestroy()
-        fun takeView(view: View?)
+        fun getPokemonListFromDb()
     }
 }
