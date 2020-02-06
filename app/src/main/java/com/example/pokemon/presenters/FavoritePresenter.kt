@@ -44,7 +44,7 @@ class FavoritePresenter
         compositeDisposable.dispose()
     }
 
-    override fun takeView(view: FavoritesContract.View) {
+    override fun takeView(view: FavoritesContract.View?) {
         this.view = view
     }
 

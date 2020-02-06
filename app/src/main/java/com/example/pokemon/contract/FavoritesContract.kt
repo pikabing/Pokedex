@@ -15,6 +15,6 @@ interface FavoritesContract {
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun getPokemon(id: Int) : Pokemon
         fun onDestroy()
-        fun takeView(view: View)
+        fun takeView(view: View?)
     }
 }

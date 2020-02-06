@@ -45,7 +45,7 @@ class DetailPresenter
 
     }
 
-    override fun takeView(view: DetailContract.View) {
+    override fun takeView(view: DetailContract.View?) {
         this.view = view
     }
 

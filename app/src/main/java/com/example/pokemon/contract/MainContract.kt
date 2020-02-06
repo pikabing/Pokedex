@@ -18,6 +18,6 @@ interface MainContract {
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun getPokemonDetailsFromDb()
         fun onDestroy()
-        fun takeView(view: View)
+        fun takeView(view: View?)
     }
 }

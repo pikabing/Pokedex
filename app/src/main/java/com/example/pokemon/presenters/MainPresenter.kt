@@ -92,7 +92,7 @@ class MainPresenter
         }
     }
 
-    override fun takeView(view: MainContract.View) {
+    override fun takeView(view: MainContract.View?) {
         this.view = view
     }
 }
