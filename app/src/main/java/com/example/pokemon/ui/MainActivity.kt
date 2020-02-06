@@ -86,7 +86,7 @@ class MainActivity : DaggerAppCompatActivity(),
         super.onResume()
 
         if(!isConnectedToNetwork() || firstTimeOpened)
-            presenter.getPokemonDetailsFromDb()
+            presenter.getPokemonListFromDb()
 
         firstTimeOpened = true
     }
