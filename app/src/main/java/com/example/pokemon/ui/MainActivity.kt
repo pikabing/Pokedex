@@ -74,7 +74,7 @@ class MainActivity : DaggerAppCompatActivity(),
 
     }
 
-    fun isConnectedToNetwork() = Common.isConnectedToNetwork(applicationContext)
+    private fun isConnectedToNetwork() = Common.isConnectedToNetwork(applicationContext)
 
     override fun onResume() {
         super.onResume()
