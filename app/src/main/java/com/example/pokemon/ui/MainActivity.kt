@@ -31,8 +31,6 @@ class MainActivity : DaggerAppCompatActivity(),
 
     private var pokemonAdapter: PokemonAdapter? = null
 
-    private var firstTimeOpened: Boolean = false
-
     @Inject
     lateinit var presenter: MainContract.Presenter
 
@@ -84,11 +82,7 @@ class MainActivity : DaggerAppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-
-        if(!isConnectedToNetwork() || firstTimeOpened)
-            presenter.getPokemonListFromDb()
-
-        firstTimeOpened = true
+        presenter.getPokemonListFromDb()
     }
 
     override fun showPokemonRV() {
@@ -102,18 +96,17 @@ class MainActivity : DaggerAppCompatActivity(),
 
     override fun setPokemonAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.handleLoading(false)
-        pokemonAdapter?.addData(pokeList)
+        setListToAdapter(pokeList)
         isLoading = false
 
     }
 
-    override fun resetPokemonList(pokeList: List<Pokemon>) {
+    override fun setListToAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.updateData(pokeList)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        firstTimeOpened = false
         pokemonAdapter?.setListenerToNull()
         presenter.dropView()
     }

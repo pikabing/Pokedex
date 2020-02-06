@@ -68,8 +68,9 @@ class MainPresenter
     @SuppressLint("DefaultLocale")
     private fun populateList(response: List<Pokemon>) {
         response.let {
-            pokeList.addAll(response)
-            mView?.setPokemonAdapter(response)
+            pokeList.addAll(it)
+            pokeList = ArrayList(pokeList.distinct())
+            mView?.setPokemonAdapter(pokeList)
             mView?.showPokemonRV()
         }
 
@@ -79,7 +80,7 @@ class MainPresenter
         response.let {
             if (it.isNotEmpty()) {
                 pokeList = ArrayList(it)
-                mView?.resetPokemonList(it)
+                mView?.setListToAdapter(it)
             }
         }
     }

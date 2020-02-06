@@ -119,13 +119,6 @@ class PokemonAdapter(
 
     class ProgressBarViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
-    fun addData(pokeList: List<Pokemon>) {
-        val size = this.pokeList.size
-        this.pokeList.addAll(pokeList)
-        val sizeNew = this.pokeList.size
-        notifyItemRangeInserted(size, sizeNew)
-    }
-
     fun updateData(pokeList: List<Pokemon>) {
         val diffUtilCallBack = DiffUtilCallBack(this.pokeList, pokeList)
         val diffResult = DiffUtil.calculateDiff(diffUtilCallBack)

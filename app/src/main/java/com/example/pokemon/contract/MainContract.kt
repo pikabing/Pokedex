@@ -10,7 +10,7 @@ interface MainContract {
         fun showPokemonRV()
         fun hidePokemonRV()
         fun setPokemonAdapter(pokeList: List<Pokemon>)
-        fun resetPokemonList(pokeList: List<Pokemon>)
+        fun setListToAdapter(pokeList: List<Pokemon>)
     }
 
     interface Presenter: MvpPresenter<View> {
