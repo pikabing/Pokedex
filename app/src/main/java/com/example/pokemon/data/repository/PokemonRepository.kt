@@ -17,11 +17,9 @@ class PokemonRepository
 @Inject
 constructor(
     private val mAppDatabase: AppDatabase,
-    private val appContext: Context
+    private val appContext: Context,
+    private val pokemonApiService: PokemonApiService
 ) {
-
-    @Inject
-    lateinit var pokemonApiService: PokemonApiService
 
     fun getPokemonList(offset: Int): Single<List<Pokemon>> {
 
