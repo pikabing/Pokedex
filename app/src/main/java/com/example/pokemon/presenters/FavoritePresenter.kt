@@ -1,35 +1,32 @@
 package com.example.pokemon.presenters
 
 import com.example.pokemon.contract.FavoritesContract
-import com.example.pokemon.contract.MainContract
 import com.example.pokemon.data.repository.PokemonRepository
 import com.example.pokemon.model.Pokemon
+import com.example.pokemon.utils.common.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class FavoritePresenter
 @Inject constructor(
     private val pokemonRepository: PokemonRepository
-    ) :
+) : BasePresenter<FavoritesContract.View>(),
     FavoritesContract.Presenter {
 
     private var pokeList: ArrayList<Pokemon> = arrayListOf()
-    private val compositeDisposable = CompositeDisposable()
-    private var view: FavoritesContract.View? = null
 
     override fun getFavoriteList() {
-        compositeDisposable.add(
+        mCompositeDisposable.add(
             pokemonRepository.getFavoritePokemonsList().subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()
             ).subscribe({
                 it?.let {
                     pokeList = ArrayList(it)
-                    view?.setPokemonAdapter(pokeList)
+                    mView?.setPokemonAdapter(pokeList)
                 }
             }, {
-                view?.showErrorToast()
+                mView?.showErrorToast("Error retrieving favorite Pokemon list")
             })
         )
     }
@@ -38,14 +35,5 @@ class FavoritePresenter
         pokemonRepository.setFavoritePokemon(pokemon, buttonState)
 
     override fun getPokemon(id: Int) = pokeList[id]
-
-    override fun onDestroy() {
-        view = null
-        compositeDisposable.dispose()
-    }
-
-    override fun takeView(view: FavoritesContract.View?) {
-        this.view = view
-    }
 
 }
