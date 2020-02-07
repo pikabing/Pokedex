@@ -3,4 +3,5 @@
     <dimen name="spinner">75dp</dimen>
     <dimen name="marginProperties">60dp</dimen>
     <dimen name="sidePadding">10dp</dimen>
+    <dimen name="returnToTop">45dp</dimen>
 </resources>

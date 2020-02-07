@@ -13,6 +13,7 @@ interface MainContract {
         fun setListToAdapter(pokeList: List<Pokemon>)
         fun refreshPokemonList()
         fun setRefreshFalse()
+        fun returnToTop()
 
     }
 
