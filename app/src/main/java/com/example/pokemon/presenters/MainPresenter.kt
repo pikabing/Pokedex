@@ -88,7 +88,6 @@ class MainPresenter
             if (it.isNotEmpty()) {
                 pokeList = ArrayList(it)
                 mView?.setListToAdapter(it)
-                mView?.showPokemonRV()
             }
         }
     }
