@@ -1,9 +1,13 @@
 package com.example.pokemon.ui
 
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
@@ -32,6 +36,8 @@ class MainActivity : DaggerAppCompatActivity(),
 
     private var pokemonAdapter: PokemonAdapter? = null
 
+    private lateinit var  searchView: SearchView
+
     @Inject
     lateinit var presenter: MainContract.Presenter
 
@@ -41,6 +47,11 @@ class MainActivity : DaggerAppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Toolbar stuff
+        setSupportActionBar(materialToolbar)
+        supportActionBar?.setTitle(R.string.app_name)
+
+        //Set view to presenter
         presenter.takeView(this)
 
         hidePokemonRV()
@@ -82,18 +93,12 @@ class MainActivity : DaggerAppCompatActivity(),
         val sidePadding = resources.getDimensionPixelSize(R.dimen.sidePadding)
         pokemonRV.addItemDecoration(PokemonItemDecoration(sidePadding))
 
-        //open favorites activity
-        favorites.setOnClickListener {
-            val intent = Intent(this, FavoritesActivity::class.java)
-            startActivity(intent)
-
-        }
-
         swipeRefreshLayout.setOnRefreshListener {
             refreshPokemonList()
         }
 
         swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimaryDark))
+
     }
 
     private fun isConnectedToNetwork() = NetworkCheck.isConnectedToNetwork(applicationContext)
@@ -101,6 +106,53 @@ class MainActivity : DaggerAppCompatActivity(),
     override fun onResume() {
         super.onResume()
         presenter.getPokemonListFromDb()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        val searchManager: SearchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
+        searchView.setSearchableInfo(
+            searchManager
+                .getSearchableInfo(componentName)
+        )
+        searchView.maxWidth = Integer.MAX_VALUE
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//            }
+//
+//        })
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        val id = item.itemId
+
+        if (id == R.id.action_search) {
+            return true
+        }
+
+        if (id == R.id.open_favorites) {
+            val intent = Intent(this, FavoritesActivity::class.java)
+            startActivity(intent)
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        if (!searchView.isIconified) {
+            searchView.isIconified = true
+            return
+        }
+        super.onBackPressed()
     }
 
     override fun showPokemonRV() {
@@ -151,5 +203,6 @@ class MainActivity : DaggerAppCompatActivity(),
     override fun returnToTop() {
         pokemonRV.smoothScrollToPosition(0)
     }
+
 
 }
