@@ -14,7 +14,6 @@ interface MainContract {
         fun refreshPokemonList()
         fun setRefreshFalse()
         fun returnToTop()
-
     }
 
     interface Presenter: MvpPresenter<View> {

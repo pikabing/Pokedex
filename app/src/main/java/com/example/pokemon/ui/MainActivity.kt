@@ -116,11 +116,11 @@ class MainActivity : DaggerAppCompatActivity(),
         pokemonAdapter?.handleLoading(false)
         setListToAdapter(pokeList)
         isLoading = false
-
     }
 
     override fun setListToAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.updateData(pokeList)
+        setRefreshFalse()
     }
 
     override fun onDestroy() {
@@ -143,7 +143,7 @@ class MainActivity : DaggerAppCompatActivity(),
         presenter.reloadPokemonList()
     }
 
-    override fun setRefreshFalse() {
+    private fun setRefreshFalse() {
         swipeRefreshLayout.isRefreshing = false
     }
 
