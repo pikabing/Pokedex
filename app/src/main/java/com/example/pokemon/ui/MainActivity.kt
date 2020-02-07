@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
+@Suppress("DEPRECATION")
 class MainActivity : DaggerAppCompatActivity(),
     MainContract.View,
     PokemonAdapter.PokemonAdapterListener {
@@ -36,7 +37,7 @@ class MainActivity : DaggerAppCompatActivity(),
 
     private var pokemonAdapter: PokemonAdapter? = null
 
-    private lateinit var  searchView: SearchView
+    private lateinit var searchView: SearchView
 
     @Inject
     lateinit var presenter: MainContract.Presenter
@@ -110,22 +111,30 @@ class MainActivity : DaggerAppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
+
         val searchManager: SearchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+
         searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
+
         searchView.setSearchableInfo(
             searchManager
                 .getSearchableInfo(componentName)
         )
+
         searchView.maxWidth = Integer.MAX_VALUE
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//            }
-//
-//        })
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                pokemonAdapter?.filter?.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                pokemonAdapter?.filter?.filter(query)
+                return false
+            }
+
+        })
 
         return true
     }

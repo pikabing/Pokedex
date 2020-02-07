@@ -3,6 +3,8 @@ package com.example.pokemon.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,11 +21,12 @@ class PokemonAdapter(
     private var pokeList: ArrayList<Pokemon>,
     private var listener: PokemonAdapterListener?
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
     private val VIEW_LOADER = 0
     private val VIEW_LIST = 1
     private var loading: Boolean = false
+    private var filteredPokeList: ArrayList<Pokemon> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -144,6 +147,32 @@ class PokemonAdapter(
     interface PokemonAdapterListener {
         fun cardOnClick(pokemon: Pokemon, position: Int)
         fun favoriteButton(pokemon: Pokemon, buttonState: Boolean)
+    }
+
+    override fun getFilter(): Filter = object : Filter() {
+
+        override fun performFiltering(charSequence: CharSequence): FilterResults {
+            val charString = charSequence.toString()
+            filteredPokeList = if (charString.isEmpty()) pokeList
+            else {
+                val filteredList: ArrayList<Pokemon> = ArrayList()
+
+                for (row in pokeList) {
+                    if (row.name.contains(charString.toLowerCase()) || row.name.contains(charString.capitalize()))
+                        filteredList.add(row)
+                }
+                filteredList
+            }
+
+            val filterResults = FilterResults()
+            filterResults.values = filteredPokeList
+            return filterResults
+        }
+
+        override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+            filteredPokeList = filterResults.values as ArrayList<Pokemon>
+            updateData(filteredPokeList)
+        }
     }
 
 }
