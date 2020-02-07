@@ -116,7 +116,6 @@ class MainActivity : DaggerAppCompatActivity(),
         pokemonAdapter?.handleLoading(false)
         setListToAdapter(pokeList)
         isLoading = false
-
     }
 
     override fun setListToAdapter(pokeList: List<Pokemon>) {
