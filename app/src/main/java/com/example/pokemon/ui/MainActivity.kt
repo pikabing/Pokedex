@@ -52,6 +52,10 @@ class MainActivity : DaggerAppCompatActivity(),
         pokemonAdapter?.handleLoading(true)
         presenter.loadMorePokemons()
 
+        returnToTop.setOnClickListener {
+            returnToTop()
+        }
+
         pokemonRV.addOnScrollListener(object : PagingListener(layoutManager) {
             override fun isLastPage(): Boolean = isLastPage
 
@@ -63,6 +67,14 @@ class MainActivity : DaggerAppCompatActivity(),
                 isLoading = true
                 pokemonAdapter?.handleLoading(true)
                 presenter.loadMorePokemons()
+            }
+
+            override fun showReturnToTop() {
+                returnToTop.visibility = View.VISIBLE
+            }
+
+            override fun hideReturnToTop() {
+                returnToTop.visibility = View.GONE
             }
 
         })
@@ -133,6 +145,11 @@ class MainActivity : DaggerAppCompatActivity(),
 
     private fun setRefreshFalse() {
         swipeRefreshLayout.isRefreshing = false
+    }
+
+
+    override fun returnToTop() {
+        pokemonRV.smoothScrollToPosition(0)
     }
 
 }

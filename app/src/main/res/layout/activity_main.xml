@@ -10,6 +10,7 @@
         android:id="@+id/rootMainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:background="@android:color/white"
         tools:context=".ui.MainActivity">
 
@@ -53,8 +54,29 @@
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/headingMain" />
+            app:layout_constraintTop_toBottomOf="@+id/headingMain"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/returnToTop"
+            android:visibility="gone"
+            style="@style/returnToTop"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/returnToTop"
+                android:layout_height="@dimen/returnToTop"
+                android:padding="10dp"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/ic_arrow_upward_black_24dp" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

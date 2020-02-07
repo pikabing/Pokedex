@@ -12,6 +12,7 @@ interface MainContract {
         fun setPokemonAdapter(pokeList: List<Pokemon>)
         fun setListToAdapter(pokeList: List<Pokemon>)
         fun refreshPokemonList()
+        fun returnToTop()
     }
 
     interface Presenter: MvpPresenter<View> {

@@ -11,6 +11,8 @@ abstract class PagingListener constructor(
     abstract fun isLoading(): Boolean
     abstract fun isConnected() : Boolean
     abstract fun loadMoreItems()
+    abstract fun showReturnToTop()
+    abstract fun hideReturnToTop()
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
@@ -23,5 +25,8 @@ abstract class PagingListener constructor(
                 loadMoreItems()
             }
         }
+
+        if(dy >= 1) hideReturnToTop()
+        if(dy < 1) showReturnToTop()
     }
 }
