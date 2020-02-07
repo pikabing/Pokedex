@@ -5,17 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.pokemon.utils.PagingListener
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.contract.MainContract
 import com.example.pokemon.model.Pokemon
-import com.example.pokemon.utils.common.NetworkCheck
+import com.example.pokemon.utils.PagingListener
 import com.example.pokemon.utils.PokemonItemDecoration
+import com.example.pokemon.utils.common.NetworkCheck
 import com.google.gson.Gson
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+
 
 class MainActivity : DaggerAppCompatActivity(),
     MainContract.View,
@@ -30,8 +31,6 @@ class MainActivity : DaggerAppCompatActivity(),
     private val pokeList: ArrayList<Pokemon> = arrayListOf()
 
     private var pokemonAdapter: PokemonAdapter? = null
-
-    private var firstTimeOpened: Boolean = false
 
     @Inject
     lateinit var presenter: MainContract.Presenter
@@ -78,17 +77,18 @@ class MainActivity : DaggerAppCompatActivity(),
 
         }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshPokemonList()
+        }
+
+        swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.colorPrimaryDark))
     }
 
     private fun isConnectedToNetwork() = NetworkCheck.isConnectedToNetwork(applicationContext)
 
     override fun onResume() {
         super.onResume()
-
-        if(!isConnectedToNetwork() || firstTimeOpened)
-            presenter.getPokemonListFromDb()
-
-        firstTimeOpened = true
+        presenter.getPokemonListFromDb()
     }
 
     override fun showPokemonRV() {
@@ -102,18 +102,17 @@ class MainActivity : DaggerAppCompatActivity(),
 
     override fun setPokemonAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.handleLoading(false)
-        pokemonAdapter?.addData(pokeList)
+        setListToAdapter(pokeList)
         isLoading = false
-
     }
 
-    override fun resetPokemonList(pokeList: List<Pokemon>) {
+    override fun setListToAdapter(pokeList: List<Pokemon>) {
         pokemonAdapter?.updateData(pokeList)
+        setRefreshFalse()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        firstTimeOpened = false
         pokemonAdapter?.setListenerToNull()
         presenter.dropView()
     }
@@ -126,6 +125,14 @@ class MainActivity : DaggerAppCompatActivity(),
 
     override fun favoriteButton(pokemon: Pokemon, buttonState: Boolean) {
         presenter.setFavorite(pokemon, buttonState)
+    }
+
+    override fun refreshPokemonList() {
+        presenter.reloadPokemonList()
+    }
+
+    private fun setRefreshFalse() {
+        swipeRefreshLayout.isRefreshing = false
     }
 
 }

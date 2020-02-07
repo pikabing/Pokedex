@@ -10,7 +10,8 @@ interface MainContract {
         fun showPokemonRV()
         fun hidePokemonRV()
         fun setPokemonAdapter(pokeList: List<Pokemon>)
-        fun resetPokemonList(pokeList: List<Pokemon>)
+        fun setListToAdapter(pokeList: List<Pokemon>)
+        fun refreshPokemonList()
     }
 
     interface Presenter: MvpPresenter<View> {
@@ -18,5 +19,6 @@ interface MainContract {
         fun getPokemon(id: Int): Pokemon
         fun setFavorite(pokemon: Pokemon, buttonState: Boolean)
         fun getPokemonListFromDb()
+        fun reloadPokemonList()
     }
 }

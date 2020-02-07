@@ -80,4 +80,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
     implementation "com.google.dagger:dagger-android-support:$dagger2_version"
 
+    //swipeRefreshLayout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+
 }
