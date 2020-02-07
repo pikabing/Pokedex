@@ -12,8 +12,6 @@ interface MainContract {
         fun setPokemonAdapter(pokeList: List<Pokemon>)
         fun setListToAdapter(pokeList: List<Pokemon>)
         fun refreshPokemonList()
-        fun setRefreshFalse()
-
     }
 
     interface Presenter: MvpPresenter<View> {

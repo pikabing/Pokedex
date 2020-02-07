@@ -69,8 +69,6 @@ class MainPresenter
                     mView?.showErrorToast("Error calling API")
                 })
         )
-        mView?.setRefreshFalse()
-
     }
 
 
