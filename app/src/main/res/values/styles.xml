@@ -70,6 +70,6 @@
 
     <style name="returnToTopShape" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">25dp</item>
+        <item name="cornerSize">28dp</item>
     </style>
 </resources>

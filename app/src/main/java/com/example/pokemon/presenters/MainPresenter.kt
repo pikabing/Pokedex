@@ -69,8 +69,6 @@ class MainPresenter
                     mView?.showErrorToast("Error calling API")
                 })
         )
-        mView?.setRefreshFalse()
-
     }
 
 
@@ -90,7 +88,6 @@ class MainPresenter
             if (it.isNotEmpty()) {
                 pokeList = ArrayList(it)
                 mView?.setListToAdapter(it)
-                mView?.showPokemonRV()
             }
         }
     }

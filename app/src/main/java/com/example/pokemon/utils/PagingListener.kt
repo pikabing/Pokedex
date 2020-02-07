@@ -26,7 +26,7 @@ abstract class PagingListener constructor(
             }
         }
 
-        if(dy > 2) hideReturnToTop()
-        if(dy <= 2) showReturnToTop()
+        if(dy >= 1) hideReturnToTop()
+        if(dy < 1) showReturnToTop()
     }
 }
