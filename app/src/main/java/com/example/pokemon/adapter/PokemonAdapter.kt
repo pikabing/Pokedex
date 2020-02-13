@@ -1,5 +1,6 @@
 package com.example.pokemon.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ class PokemonAdapter(
     private val VIEW_LOADER = 0
     private val VIEW_LIST = 1
     private var loading: Boolean = false
-    private var filteredPokeList: ArrayList<Pokemon> = arrayListOf()
+    private var filteredPokeList: ArrayList<Pokemon> = this.pokeList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -56,7 +57,7 @@ class PokemonAdapter(
         }
     }
 
-    override fun getItemCount(): Int = if (loading) pokeList.size + 1 else pokeList.size
+    override fun getItemCount(): Int = if (loading) filteredPokeList.size + 1 else filteredPokeList.size
 
     override fun getItemViewType(position: Int): Int {
         return when (loading && position == itemCount - 1) {
@@ -67,7 +68,7 @@ class PokemonAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is PokemonViewHolder -> holder.bind(pokeList[position], listener)
+            is PokemonViewHolder -> holder.bind(filteredPokeList[position], listener)
             is ProgressBarViewHolder -> {
                 val layoutParams = holder.itemView.layoutParams
                 if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
@@ -80,9 +81,9 @@ class PokemonAdapter(
     fun handleLoading(loading: Boolean) {
         this.loading = loading
         if (loading) {
-            notifyItemInserted(pokeList.size)
+            notifyItemInserted(filteredPokeList.size)
         } else {
-            notifyItemRemoved(pokeList.size)
+            notifyItemRemoved(filteredPokeList.size)
         }
     }
 
@@ -123,19 +124,24 @@ class PokemonAdapter(
     class ProgressBarViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
     fun updateData(pokeList: List<Pokemon>) {
+        Log.e("updateData", "" + pokeList.size + " - " + this.pokeList.size + " - " + filteredPokeList.size)
         val diffUtilCallBack = DiffUtilCallBack(this.pokeList, pokeList)
         val diffResult = DiffUtil.calculateDiff(diffUtilCallBack)
 
-        this.pokeList.clear()
-        this.pokeList.addAll(pokeList)
+        this.pokeList = ArrayList(pokeList)
+        filteredPokeList = ArrayList(pokeList)
+
+//        filteredPokeList.clear()
+//        filteredPokeList.addAll(pokeList)
+
         diffResult.dispatchUpdatesTo(this)
 
     }
 
     fun removePokemonFromFavorite(pokemon: Pokemon) {
-        val index = pokeList.indexOf(pokemon)
+        val index = filteredPokeList.indexOf(pokemon)
         if (index != -1) {
-            pokeList.remove(pokemon)
+            filteredPokeList.remove(pokemon)
             notifyItemRemoved(index)
         }
     }
@@ -153,25 +159,27 @@ class PokemonAdapter(
 
         override fun performFiltering(charSequence: CharSequence): FilterResults {
             val charString = charSequence.toString()
-            filteredPokeList = if (charString.isEmpty()) pokeList
+            filteredPokeList = if (charString.isEmpty()) ArrayList(pokeList)
             else {
                 val filteredList: ArrayList<Pokemon> = ArrayList()
 
-                for (row in pokeList) {
-                    if (row.name.contains(charString.toLowerCase()) || row.name.contains(charString.capitalize()))
-                        filteredList.add(row)
+                for (pokemon in pokeList) {
+                    if (pokemon.name.contains(charString.toLowerCase()) || pokemon.name.contains(charString.capitalize()))
+                        filteredList.add(pokemon)
                 }
                 filteredList
             }
 
             val filterResults = FilterResults()
             filterResults.values = filteredPokeList
+            Log.e("performFiltering", "" + filteredPokeList.size)
             return filterResults
         }
 
         override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
-            filteredPokeList = filterResults.values as ArrayList<Pokemon>
-            updateData(filteredPokeList)
+            Log.e("TAG", "${(filterResults.values as ArrayList<Pokemon>).size}")
+//            notifyDataSetChanged()
+            updateData(filterResults.values as List<Pokemon>)
         }
     }
 

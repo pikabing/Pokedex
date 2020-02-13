@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -124,6 +125,7 @@ class MainActivity : DaggerAppCompatActivity(),
         searchView.maxWidth = Integer.MAX_VALUE
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
             override fun onQueryTextSubmit(query: String?): Boolean {
                 pokemonAdapter?.filter?.filter(query)
                 return false
@@ -131,7 +133,7 @@ class MainActivity : DaggerAppCompatActivity(),
 
             override fun onQueryTextChange(query: String?): Boolean {
                 pokemonAdapter?.filter?.filter(query)
-                return false
+                return true
             }
 
         })
